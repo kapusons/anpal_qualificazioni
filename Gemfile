@@ -67,3 +67,8 @@ end
 
 
 gem 'airbrake'
+gem 'devise'
+gem 'cancancan'
+gem 'activeadmin'
+gem 'globalize'
+gem 'activeadmin_addons'
