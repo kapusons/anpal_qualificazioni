@@ -65,3 +65,5 @@ group :development do
   gem 'capistrano-rbenv', '~> 2.1', '>= 2.1.4'
 end
 
+
+gem 'airbrake'

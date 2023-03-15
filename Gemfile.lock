@@ -66,6 +66,10 @@ GEM
       i18n (>= 1.6, < 2)
       minitest (>= 5.1)
       tzinfo (~> 2.0)
+    airbrake (13.0.3)
+      airbrake-ruby (~> 6.0)
+    airbrake-ruby (6.2.0)
+      rbtree3 (~> 0.5)
     airbrussh (1.4.1)
       sshkit (>= 1.6.1, != 1.7.0)
     bindex (0.8.1)
@@ -171,6 +175,7 @@ GEM
       thor (~> 1.0)
       zeitwerk (~> 2.5)
     rake (13.0.6)
+    rbtree3 (0.7.0)
     reline (0.3.2)
       io-console (~> 0.5)
     sprockets (4.2.0)
@@ -209,6 +214,7 @@ PLATFORMS
   x86_64-linux
 
 DEPENDENCIES
+  airbrake
   bootsnap
   capistrano (~> 3.11)
   capistrano-passenger (~> 0.2.0)
