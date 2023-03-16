@@ -33,5 +33,11 @@ module Anpal
 
     # Don't generate system test files.
     config.generators.system_tests = nil
+
+    config.i18n.default_locale = :it
+    config.i18n.fallbacks = [:it, :en]
+    config.i18n.available_locales = [:it, :en]
+    config.time_zone = 'Europe/Rome'
+    config.active_job.queue_adapter = :sidekiq
   end
 end

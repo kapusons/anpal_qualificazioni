@@ -59,6 +59,22 @@ Rails.application.configure do
 
   config.action_mailer.perform_caching = false
 
+  config.action_mailer.raise_delivery_errors = true
+  config.action_mailer.delivery_method = :smtp
+  config.action_mailer.smtp_settings = {
+    :address              => 'xxxxxxx',
+    :port                 =>  587,
+    :domain               => 'xxxxxxx.xxx',
+    :user_name            => 'xxxxxxx',
+    :password             => 'xxxxxxxxx',
+    :authentication       => 'plain',
+    :openssl_verify_mode    => "none"
+  }
+  Rails.application.routes.default_url_options[:host] = 'anpal.kapusons.it' # questo è necessario per active_storage
+  Rails.application.routes.default_url_options[:protocol] = 'https'
+  config.action_mailer.default_url_options = { host: 'anpal.kapusons.it', protocol: 'https' }
+  config.action_mailer.asset_host = 'https://anpal.kapusons.it'
+
   # Ignore bad email addresses and do not raise email delivery errors.
   # Set this to true and configure the email server for immediate delivery to raise delivery errors.
   # config.action_mailer.raise_delivery_errors = false
@@ -85,4 +101,30 @@ Rails.application.configure do
 
   # Do not dump schema after migrations.
   config.active_record.dump_schema_after_migration = false
+
+  config.log_tags = [:uuid,
+                     lambda { |req|
+                       begin
+                         session_key = Rails.application.config.session_options[:key] || "_session_id"
+                         session_data = req.cookie_jar.encrypted[session_key]
+                         warden_data = (session_data && session_data["warden.user.admin_user.key"] || [[]])
+                         admin_user = warden_data[0][0]
+                         if admin_user
+                           "admin: #{admin_user}"
+                         else
+                           type, token = req.headers["Authorization"].try(:split, " ") || req.headers["authorization"].try(:split, " ")
+                           if type == 'Basic' && token
+                             "http basic"
+                           elsif type == Warden::JWTAuth::HeaderParser::METHOD && token
+                             payload = token ? Warden::JWTAuth::TokenDecoder.new.call(token) : nil
+                             user = payload ? Warden::JWTAuth::PayloadUserHelper.find_user(payload).try(:id) : nil
+                             user ? "user: #{user}" : "no user"
+                           else
+                             "no user"
+                           end
+                         end
+                       rescue Exception
+                       end
+                     }
+  ]
 end

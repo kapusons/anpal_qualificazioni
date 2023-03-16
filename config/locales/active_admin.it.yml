@@ -1,0 +1,7 @@
+it:
+  active_admin:
+    dashboards:
+      welcome: Benvenuto nel backoffice.
+    menu:
+      parents:
+        administration: Amministrazione

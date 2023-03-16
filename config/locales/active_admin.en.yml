@@ -1,0 +1,7 @@
+en:
+  active_admin:
+    dashboards:
+      welcome: Welcome.
+    menu:
+      parents:
+        administration: Administration
