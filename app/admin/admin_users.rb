@@ -32,7 +32,6 @@ ActiveAdmin.register AdminUser do
       row :email
       if current_admin_user.super_admin?
         row :role
-        row :institution
         row :reset_password_token
         row :reset_password_sent_at
         row :remember_created_at
