@@ -5,3 +5,9 @@ it:
     menu:
       parents:
         administration: Amministrazione
+    applications:
+      new_application: Aggiungi
+    filters:
+      application:
+        translations_title_contains: Titolo
+        translations_description_contains: Descrizione

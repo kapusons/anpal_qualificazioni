@@ -1,0 +1,11 @@
+<%=
+  active_admin_form_for [:admin, @application], url: url do |f|
+    f.inputs do
+      f.translate_inputs do |t|
+        t.input :title
+        t.input :description, as: :action_text
+      end
+    end
+    f.actions
+  end
+%>

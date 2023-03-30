@@ -1,0 +1,13 @@
+<%=
+  active_admin_form_for [:admin, @application], url: url do |f|
+    f.inputs do
+      f.input :expiration_date, as: :datepicker,
+              datepicker_options: {
+                # min_date: 3.days.ago.to_date,
+                # max_date: "+1W +5D"
+                # date_format: I18n.t("date.formats.default")
+              }
+    end
+    f.actions
+  end
+%>

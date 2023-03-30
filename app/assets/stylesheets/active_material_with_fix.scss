@@ -1,0 +1,26 @@
+@import "active_material";
+
+body.page1 #main_content > form,
+body.save_page1 #main_content > form,
+body.page2 #main_content > form,
+body.save_page2 #main_content > form,
+body.update1 #main_content > form {
+  @include am-paper;
+
+  > h3 {
+    @include am-subheader;
+  }
+
+  .header_action {
+    float: right
+  }
+
+  .row th {
+    width: 20%;
+    padding-left: am-unit(2);
+  }
+}
+
+.sidebar .sidebar_section .active_filters_sidebar_content h4 {
+  margin-left: 20px;
+}
