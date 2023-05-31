@@ -1,0 +1,17 @@
+<%= render partial: 'admin/progress', locals: { step: 3 } %>
+<%=
+  active_admin_form_for [:admin, @application], url: url do |f|
+    f.inputs do
+      f.has_many :learning_opportunities, allow_destroy: true, class: "columns" do |b|
+        b.input :location
+        b.input :duration
+        b.input :institution
+        b.input :manner
+      end
+      f.actions do
+        f.action :submit, label: I18n.t("active_admin.actions.application.send")
+        cancel_link
+      end
+    end
+  end
+%>

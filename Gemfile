@@ -82,3 +82,8 @@ gem 'rails-i18n'
 
 gem 'globalize'
 gem 'activeadmin-translate', git: 'https://github.com/langelone/activeadmin-translate.git'
+gem 'faraday'
+gem 'roo'
+gem 'aasm'
+gem 'kaminari-i18n'
+gem "font-awesome-rails"

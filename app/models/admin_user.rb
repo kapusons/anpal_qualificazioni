@@ -16,6 +16,7 @@
 #  role                   :integer
 #  created_at             :datetime         not null
 #  updated_at             :datetime         not null
+#  name                   :string(255)
 #
 class AdminUser < ApplicationRecord
   # Include default devise modules. Others available are:
@@ -23,5 +24,12 @@ class AdminUser < ApplicationRecord
   devise :database_authenticatable, :recoverable, :rememberable, :validatable, :trackable, :async
 
   enum role: [ :super_admin, :level_1, :level_2, :level_3, :level_4, :level_5, :level_6 ]
+
+  validates :name, :email, :role, presence: true
+
+
+  def self.human_enum_name(enum_name, enum_value)
+    I18n.t("activerecord.attributes.#{model_name.i18n_key}.#{enum_name.to_s.pluralize}.#{enum_value}")
+  end
 
 end

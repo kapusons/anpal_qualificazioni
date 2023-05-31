@@ -1,3 +1,22 @@
+@mixin clearfix {
+  &:after {
+    visibility: hidden;
+    display: block;
+    content: "";
+    clear: both;
+    height: 0;
+  }
+}
+
+@import "active_material/values/colors";
+$primary-color: $am-theme-primary;
+
+@mixin no-shadow {
+  box-shadow: none;
+}
+
+
+@import "active_admin/components/comments";
 @import "active_material";
 
 body.page1 #main_content > form,
@@ -23,4 +42,40 @@ body.update1 #main_content > form {
 
 .sidebar .sidebar_section .active_filters_sidebar_content h4 {
   margin-left: 20px;
+}
+.comments {
+  .active_admin_comment .active_admin_comment_meta {
+    font-size: 0.8em;
+  //rgba(0, 0, 0, 0.54)
+    //font-weight: bold;
+    //margin: 0;
+    color: #5E6469;
+    .active_admin_comment_author {
+      font-size: 1em;
+      line-height: 1;
+      margin-bottom: 0.8em;
+    }
+  }
+  .pagination_information {
+    font-size: 0.8em;
+    //margin-bottom: 5px;
+    //margin-left: 15px;
+    margin: 0 0 5px 15px;
+    float: left;
+    b {
+      font-size: 1em;
+    }
+  }
+  form.active_admin_comment {
+    margin-left: 165px;
+
+    fieldset.actions {
+      padding: 0;
+      box-shadow: none;
+
+      input[type="submit"] {
+        margin: 10px 0 20px 0;
+      }
+    }
+  }
 }

@@ -1,3 +1,5 @@
+@import 'activeadmin_addons/all';
+@import "./activeadmin_addons_customization";
 // Sass variable overrides must be declared before loading up Active Admin's styles.
 //
 // To view the variables that Active Admin provides, take a look at
@@ -14,8 +16,75 @@
 @import "trix";
 @import "actiontext";
 @import "active_admin/translate";
+@import "progress";
+@import "font-awesome";
 
 // Overriding any non-variable Sass must be done after the fact.
 // For example, to change the default status-tag color:
 //
 //   .status_tag { background: #6090DB; }
+
+.active_admin .activeadmin-translate .locales li.ui-state-active {
+  background: white;
+  border-bottom-color: white;
+  border-top: 2px solid #cdcdcd;
+  border-left: 1px solid #cdcdcd;
+  border-right: 1px solid #cdcdcd;
+  position: relative;
+  border-radius: 0px;
+  a {
+    position: relative;
+    z-index: 1;
+  }
+}
+.active_admin .activeadmin-translate .locale {
+  clear: left;
+  position: relative;
+  padding: 0 20px;
+}
+
+.active_admin .activeadmin-translate .locale:before {
+  content: "";
+  position: absolute;
+  left: 20px;
+  right: 20px;
+  top: 0;
+  bottom: 0;
+  border: 1px solid #cdcdcd;
+}
+
+.status_tag.user {
+  &.draft {
+    background-color: #FFD700;
+  }
+  &.integration_required {
+    background-color: orange;
+  }
+  &.completed {
+    background-color: #2eb774;
+  }
+  &.reviewed {
+    background-color: darkgreen;
+  }
+  &.accepted {
+    background-color: darkgreen;
+  }
+}
+
+.status_tag.admin {
+  &.draft {
+    background-color: orange;
+  }
+  &.integration_required {
+    background-color: #2eb774;
+  }
+  &.completed {
+    background-color: orange;
+  }
+  &.reviewed {
+    background-color: darkgreen;
+  }
+  &.accepted {
+    background-color: darkgreen;
+  }
+}

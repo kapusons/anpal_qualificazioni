@@ -1,11 +1,34 @@
+<%= render partial: 'admin/progress', locals: { step: 1 } %>
 <%=
   active_admin_form_for [:admin, @application], url: url do |f|
     f.inputs do
+      f.input :atlante_title, as: :hidden
+      f.input :atlante_code, as: :hidden
+      # f.input :atlante_region, as: :hidden
+      f.input :guarantee_process, as: :hidden
+      f.input :atlante, as: :select, collection: adas, input_html: { class: "atlante-adas", "data-url": atlante_admin_applications_path, "data-message": I18n.t("active_admin.applications.confim_ada_selection") }
       f.translate_inputs do |t|
-        t.input :title
-        t.input :description, as: :action_text
+        t.input :title, required: true
+        t.input :url, required: true
       end
     end
-    f.actions
+    f.inputs class: "inputs columns" do
+      f.input :isced_ids, as: :select, collection: Isced.all.map { |a| [a.name, a.id] }, multiple: true, required: true
+      f.input :region, as: :select, collection: Region.all.map { |a| [a.name, a.id] }, required: true
+    end
+    f.inputs class: "inputs columns" do
+      f.input :credit, input_html: { type: 'number' }
+      f.input :nqf_level, as: :select, collection: NqfLevel.all.map { |a| [a.name, a.id] }, required: true
+    end
+    f.inputs class: "inputs columns" do
+      f.input :nqf_level_in, as: :select, collection: NqfLevelIn.all.map { |a| [a.name, a.id] }, required: true
+      f.input :nqf_level_out, as: :select, collection: NqfLevelOut.all.map { |a| [a.name, a.id] }, required: true
+
+    end
+    f.actions class: "inputs columns" do
+      f.action :submit, label: I18n.t("active_admin.actions.application.submit")
+      cancel_link
+      f.action :submit, label: I18n.t("active_admin.actions.application.save_without_validation")
+    end
   end
 %>

@@ -1,0 +1,28 @@
+<div class="nav-progress">
+  <% [1, 2, 3].each do |current_step| %>
+    <%
+      klass = step == current_step ? 'active' : (step > current_step ? 'complete' : '')
+      klass += " #{@application.persisted? ? "" : "without_link"}"
+    %>
+    <div class="<%= klass %>">
+      <% content = capture do %>
+        Step <%= current_step %>
+        <% if @application.errors_present?(current_step) %>
+          <%= fa_icon "exclamation-circle" %>
+        <% end %>
+        <div class="arrow-wrapper">
+          <div class="arrow-cover">
+            <div class="arrow"></div>
+          </div>
+        </div>
+      <% end %>
+      <% if @application.persisted? %>
+        <%= link_to send("page#{current_step}_admin_application_path", @application) do
+          content
+        end %>
+        <% else %>
+          <%= content %>
+        <% end %>
+    </div>
+  <% end %>
+</div>

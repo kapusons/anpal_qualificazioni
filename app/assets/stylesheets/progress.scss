@@ -1,0 +1,102 @@
+@import "active_material/values/colors";
+$primary-color: $am-theme-primary;
+$nav-border-color: black;
+$nav-border-width: 2px;
+$nav-bg-color: $am-theme-primary-700;
+$bg-color: #f7f7f7;
+
+@mixin border-radius($radius) {
+  -webkit-border-radius: $radius;
+  -moz-border-radius: $radius;
+  border-radius: $radius;
+}
+
+@mixin rotate($deg) {
+  -webkit-transform: rotate($deg);
+  -moz-transform: rotate($deg);
+  -ms-transform: rotate($deg);
+  -o-transform: rotate($deg);
+  transform: rotate($deg);
+}
+
+.nav-progress {
+  display: table;
+  overflow: hidden;
+  margin: 0;
+  margin-bottom: 25px;
+  width: 100%;
+  height: 50px;
+  border: $nav-border-width solid $nav-border-color;
+  background-color: $bg-color;
+  @include border-radius(6px);
+  > div {
+    position: relative;
+    display: table-cell;
+    color: $nav-border-color;
+    text-align: center;
+    font-size: 1.125em;
+    line-height: 1.250em;
+    &.without_link {
+      padding: 14px 0;
+    }
+    i.fa {
+      color: $am-theme-error;
+    }
+    a {
+      display: block;
+      width: 100%;
+      height: 47px;
+      padding: 0;
+      margin: 0;
+      line-height: 47px;
+      &:active, &:hover, &:focus {
+        text-decoration: none;
+      }
+    }
+    &.complete {
+      background-color: $nav-bg-color;
+      color: #FFF;
+      a {
+        color: white;
+      }
+      .arrow {
+        border: $nav-border-width solid $nav-border-color !important;
+        background: $nav-bg-color !important;
+      }
+    }
+    &.active {
+      background-color: $primary-color;
+      color: #FFF;
+      a {
+        color: white;
+      }
+      .arrow {
+        //border: none !important;
+        background: $primary-color !important;
+      }
+    }
+  }
+}
+
+.arrow-wrapper {
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  .arrow-cover {
+    position: absolute;
+    overflow: hidden;
+    width: 24px;
+    height: 50px;
+    .arrow {
+      position: absolute;
+      left: -34px;
+      z-index: 2;
+      width: 50px;
+      height: 50px;
+      border: $nav-border-width solid $nav-border-color;
+      background: transparent;
+      @include border-radius(6px);
+      @include rotate(45deg);
+    }
+  }
+}

@@ -1,13 +1,38 @@
+<%= render partial: 'admin/progress', locals: { step: 2 } %>
 <%=
   active_admin_form_for [:admin, @application], url: url do |f|
     f.inputs do
-      f.input :expiration_date, as: :datepicker,
-              datepicker_options: {
-                # min_date: 3.days.ago.to_date,
-                # max_date: "+1W +5D"
-                # date_format: I18n.t("date.formats.default")
-              }
+      # f.input :expiration_date, as: :datepicker,
+      #         datepicker_options: {
+      #           # min_date: 3.days.ago.to_date,
+      #           # max_date: "+1W +5D"
+      #           # date_format: I18n.t("date.formats.default")
+      #         }
+      f.input :expiration_date, as: :hidden
+      # f.translate_inputs do |t|
+      #   t.input :description, as: :action_text
+      # end
+      end
+    f.inputs class: "inputs columns" do
+      f.input :eqf, as: :select, collection: Eqf.all.map { |a| [a.name, a.id] }, required: true
+      f.input :certifying_agency, as: :select, collection: CertifyingAgency.all.map { |a| [a.name, a.id] }, required: true
     end
-    f.actions
+    f.inputs class: "inputs columns" do
+      f.input :guarantee_entity, as: :select, collection: GuaranteeEntity.all.map { |a| [a.name, a.id] }
+      f.input :language, as: :select, collection: Language.all.map { |a| [a.name, a.id] }, required: true
+    end
+    f.inputs class: "inputs columns" do
+      f.input :rule, as: :select, collection: Rule.all.map { |a| [a.name, a.id] }, required: true
+      f.input :admission, as: :select, collection: Admission.all.map { |a| [a.name, a.id] }, required: true
+    end
+    f.inputs class: "inputs columns" do
+      f.input :ateco_ids, as: :select, collection: Ateco.all.sort_by { |v| Gem::Version.new(v.code_category) }.map { |a| ["#{a.code_category} - #{a.description_category}", a.id] }, multiple: true
+      f.input :cp_istat_ids, as: :select, collection: CpIstat.all.sort_by { |v| Gem::Version.new(v.code) }.map { |a| ["#{a.code} - #{a.name}", a.id] }, multiple: true
+    end
+    f.actions do
+      f.action :submit, label: I18n.t("active_admin.actions.application.submit")
+      cancel_link
+      f.action :submit, label: I18n.t("active_admin.actions.application.save_without_validation")
+    end
   end
 %>

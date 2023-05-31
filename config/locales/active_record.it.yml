@@ -1,0 +1,188 @@
+it:
+  activerecord:
+    models:
+      application:
+        one: Istanza
+        other: Instanze
+      admin_user:
+        one: Utente
+        other: Utenti
+      comment:
+        one: Commento
+        other: Commenti
+      isced:
+        one: Settore
+        other: Settori
+      eqf:
+        one: Livello dell'EQF
+        other: Livelli dell'EQF
+      ateco:
+        one: Codice Ateco
+        other: Codici Ateco
+      admission:
+        one: Requisito di ammissione
+        other: Requisiti di ammissione
+      certifying_agency:
+        one: Ente certificatore
+        other: Enti certificatori
+      cp_istat:
+        one: CP Istat 2021
+        other: CP Istat 2021
+      nqf_level:
+        one: Livello NQF
+        other: Livelli NQF
+      nqf_level_in:
+        one: Livello NQF in
+        other: Livelli NQF in
+      nqf_level_out:
+        one: Livello NQF out
+        other: Livelli NQF out
+      guarantee_entity:
+        one: Organismo esterno di garanzia qualità
+        other: Organismi esterni di garanzia qualità
+      language:
+        one: Lingua delle informazioni
+        other: Lingue delle informazioni
+      rule:
+        one: Collegamento con i relativi supplementi
+        other: Collegamenti con i relativi supplementi
+      learning_opportunity:
+        one: Learning opportunity
+        other: Learning opportunities
+    attributes:
+      application:
+        atlante: Seleziona ADA già presenti su atlante per autocompletare alcuni campi
+        atlante_code: Codice selezionato da atlante
+        atlante_title: Titolo selezionato da atlante
+        atlante_region: Regione selezionata da atlante
+        title: Titolo
+        comments: Commenti
+        isceds: Settori
+        isced_ids: Settori
+        credit: Unità di credito
+        certifying_agency: Ente certificatore
+        guarantee_entity: Organismo esterno di garanzia qualità
+        admission: Requisito di ammissione
+        atecos: Ateco
+        ateco_ids: Ateco
+        cp_istats: CP Istat 2021
+        cp_istat_ids: CP Istat 2021
+        url: URL della qualificazione
+        nqf_level: Livello NQF
+        nqf_level_in: Livello NQF in
+        nqf_level_out: Livello NQF out
+        language: Lingua delle informazioni
+        created_by: Creato da
+        updated_by: Aggiornato da
+        rule: Collegamento con i relativi supplementi
+        region: Regione
+        eqf: Livello dell'EQF
+        created_at: Creato il
+        updated_at: Aggiornato il
+        statuses:
+          draft: Bozza
+          completed: In revisione
+          integration_required: Richiesta integrazione
+          reviewed: Revisionata
+          accepted: Accettata
+      application/translation:
+        title: Titolo
+        url: URL della qualificazione
+      cp_istat:
+        name: Nome
+        code: Codice
+        description: Descrizione
+        created_at: Creato il
+        updated_at: Aggiornato il
+      ateco:
+        code: Codice
+        description: Descrizione
+        code_category: Codice attività
+        description_category: Descrizione attività
+        code_micro: Codice micro
+        description_micro: Descrizione micro
+        created_at: Creato il
+        updated_at: Aggiornato il
+      active_admin/comment:
+        author: Autore
+        resource: Risorsa
+      certifying_agency:
+        name: Nome
+        created_at: Creato il
+        updated_at: Aggiornato il
+      guarantee_entity:
+        name: Nome
+        created_at: Creato il
+        updated_at: Aggiornato il
+      language:
+        name: Nome
+        code: Codice
+        created_at: Creato il
+        updated_at: Aggiornato il
+      nqf_level:
+        name: Nome
+        created_at: Creato il
+        updated_at: Aggiornato il
+      nqf_level_in:
+        name: Nome
+        created_at: Creato il
+        updated_at: Aggiornato il
+      nqf_level_out:
+        name: Nome
+        created_at: Creato il
+        updated_at: Aggiornato il
+      eqf:
+        name: Livello
+        created_at: Creato il
+        updated_at: Aggiornato il
+      admission:
+        name: Nome
+        created_at: Creato il
+        updated_at: Aggiornato il
+      rule:
+        name: Nome
+        created_at: Creato il
+        updated_at: Aggiornato il
+      isced:
+        name: Nome
+        created_at: Creato il
+        updated_at: Aggiornato il
+      admin_user:
+        name: Nome
+        role: Ruolo
+        roles:
+          super_admin: Super Admin
+          level_1: Livello 1 - Enti pubblici titolari
+          level_2: Livello 2 - INAPP
+          level_3: Livello 3 - ANPAL (PCN EQF)
+          level_4: Livello 4 - Enti autorizzati dagli Enti pubblici titolari
+          level_5: Livello 5 - Area di consultazione pubblica
+          level_6: Livello 6 - Ministero del Lavoro e delle Politiche Sociali
+        confirmation_sent_at: Conferma inviata a
+        confirmation_token: Token di conferma
+        confirmed_at: Confermato il
+        created_at: Creato il
+        current_password: Password corrente
+        current_sign_in_at: Accesso corrente il
+        current_sign_in_ip: IP accesso corrente
+        email: Email
+        encrypted_password: Password criptata
+        failed_attempts: Tentativi falliti
+        last_sign_in_at: Ultimo accesso il
+        last_sign_in_ip: Ultimo IP di accesso
+        locked_at: Bloccato il
+        password: Password
+        password_confirmation: Conferma password
+        remember_created_at: Ricordami creato il
+        remember_me: Ricordami
+        reset_password_sent_at: Reset password inviata a
+        reset_password_token: Token di reset password
+        sign_in_count: Numero di accessi
+        unconfirmed_email: Email non confermata
+        unlock_token: Token di sblocco
+        updated_at: Aggiornato il
+      learning_opportunity:
+        location: Luogo
+        duration: Durata
+        institution: Ente attuatore
+        manner: Modalità di svolgimento

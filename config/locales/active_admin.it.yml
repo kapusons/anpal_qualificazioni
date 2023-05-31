@@ -1,13 +1,36 @@
 it:
   active_admin:
+    new: Aggiungi
+    create: Aggiungi
+    page1: Modifica
+    update1: Modifica
+    page2: Modifica
+    page3: Modifica
+    save_page1: Modifica
+    save_page2: Modifica
+    save_page3: Modifica
     dashboards:
       welcome: Benvenuto nel backoffice.
     menu:
       parents:
         administration: Amministrazione
     applications:
+      sent_to_review: "L'istanza è stata inviata correttamente in revisione."
+      required_integration: "La richieta di integrazione dell'instanza è stata inviata correttamente."
+      accepted: "L'istanza è stata accettata correttamente."
       new_application: Aggiungi
+      integration_request: Richiesta integrazioni
+      accept: Accetta istanza
+      confim_ada_selection: "Attenzione: confermando l'operazione alcuni valori potrebbereo essere sostituiti con quelli derivanti da Atlante."
     filters:
+      location:
+        code_eq: Codice
+        author_of_AdminUser_type_id_eq: Autore
       application:
         translations_title_contains: Titolo
         translations_description_contains: Descrizione
+    actions:
+      application:
+        send: Invia
+        submit: Salva e procedi
+        save_without_validation: Salva come bozza
