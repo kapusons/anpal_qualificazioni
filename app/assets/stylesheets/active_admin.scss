@@ -88,3 +88,15 @@
     background-color: darkgreen;
   }
 }
+
+.dashboard-columns {
+  .column {
+    float: left;
+    .panel {
+      margin: 10px;
+    }
+  }
+  .panel_contents h4 {
+    padding: 3px 15px 15px 15px;
+  }
+}

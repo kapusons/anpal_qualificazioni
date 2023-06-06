@@ -11,6 +11,12 @@ it:
     save_page3: Modifica
     dashboards:
       welcome: Benvenuto nel backoffice.
+      last_applications: Ultimi aggiornamenti sulle tue istanze
+      last_comments: Ultimi commenti sulle tue istanze
+      nothing: Nessuno
+      see_all: Vedi tutti
+      detail: Mostra
+      create: Crea nuova istanza
     menu:
       parents:
         administration: Amministrazione
@@ -34,3 +40,6 @@ it:
         send: Invia
         submit: Salva e procedi
         save_without_validation: Salva come bozza
+    comments:
+      author: Autore
+      resource: Istanza

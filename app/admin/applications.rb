@@ -10,6 +10,7 @@ ActiveAdmin.register Application do
   actions :all, except: [:create, :update]
 
   filter :translations_title_contains, label: I18n.t("active_admin.filters.application.translations_title_contains")
+  filter :status_eq, as: :select, collection: Application.aasm.states.map(&:name).map{ |a| [Application.human_enum_name(:status, a), a] }
 
 
   action_item :integration_request, only: [:show], if: proc { resource.completed? && (current_admin_user.super_admin? || current_admin_user.level_3?) } do

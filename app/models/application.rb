@@ -76,7 +76,33 @@ class Application < ApplicationRecord
 
   scope :created_from, -> (current_user) { where(created_by: current_user) }
   scope :not_in_draft, -> { where.not(status: 'draft') }
+  scope :dashboard_for, -> (user) {
+    filtered = self
+    if user.super_admin?
+      filtered = filtered.all
+    elsif user.level_1?
 
+    elsif user.level_2?
+      filtered = filtered.where.not(status: 'draft')
+    elsif user.level_3?
+      filtered = filtered.where.not(status: 'draft')
+    end
+    filtered
+  }
+  scope :ordered_by_comment_or_status_for, -> (user) {
+    filtered = self
+    if user.super_admin?
+      all
+    elsif user.level_1?
+
+    elsif user.level_2?
+      where.not(status: 'draft')
+    elsif user.level_3?
+      where.not(status: 'draft')
+    end
+
+    filtered.left_joins(:comments).order('comments.created_at DESC').in_order_of(:status, %w[integration_required completed]).distinct
+  }
 
   STEP_1_FIELD_TO_VALIDATE = [:title, :url, :region, :nqf_level, :nqf_level_in, :nqf_level_out, :isced_ids, :credit]
   validates :title, presence: true, if: :need_validate_1?
@@ -86,8 +112,7 @@ class Application < ApplicationRecord
   validates :nqf_level_in, presence: true, if: :need_validate_1?
   validates :nqf_level_out, presence: true, if: :need_validate_1?
   validates :isced_ids, presence: true, if: :need_validate_1?
-  validates :credit, numericality: { only_integer: true, allow_blank: true}, if: :need_validate_1?
-
+  validates :credit, numericality: { only_integer: true, allow_blank: true }, if: :need_validate_1?
 
   STEP_2_FIELD_TO_VALIDATE = [:language, :rule, :admission, :certifying_agency, :eqf]
   # validates :expiration_date, presence: true, if: -> { on_step(2) }
@@ -97,7 +122,7 @@ class Application < ApplicationRecord
   validates :certifying_agency, presence: true, if: :need_validate_2?
   validates :eqf, presence: true, if: :need_validate_2?
 
-  #todo: verificare presenza di errori nello step3
+  # todo: verificare presenza di errori nello step3
   STEP_3_FIELD_TO_VALIDATE = []
 
   def need_validate_1?

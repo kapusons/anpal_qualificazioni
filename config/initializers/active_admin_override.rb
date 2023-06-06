@@ -36,3 +36,22 @@ ActiveAdmin::Views::Pages::Base.class_eval do
     end
   end
 end
+
+
+ActiveAdmin::ResourceCollection.class_eval do
+
+  # Override to customize ActiveResource of Comment
+  def add(resource)
+    if match = @collection[resource.resource_name]
+      if resource.resource_name == "Comment"
+        @collection[resource.resource_name] = resource
+      else
+        raise_if_mismatched! match, resource
+        match
+      end
+    else
+      @collection[resource.resource_name] = resource
+    end
+  end
+
+end

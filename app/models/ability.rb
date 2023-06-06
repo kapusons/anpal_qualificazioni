@@ -18,8 +18,8 @@ class Ability
       can :read, Application, Application.created_from(user) do |application|
         application.created_by == user
       end
-      can :not_delete, ActiveAdmin::Comment, ActiveAdmin::Comment.joins("INNER JOIN applications as a on a.id = resource_id AND resource_type = 'Application'") do |comment|
-        # application.created_by == user
+      can :not_delete, ActiveAdmin::Comment, ActiveAdmin::Comment.for_application_visible_by(user) do |comment|
+        comment.resource.created_by == user
       end
       can :create, ActiveAdmin::Comment, ActiveAdmin::Comment.joins("INNER JOIN applications as a on a.id = resource_id AND resource_type = 'Application'") do |comment|
         comment.resource.created_by == user# && comment.resource.completed?
@@ -29,13 +29,16 @@ class Ability
       can [:read], Application, Application.not_in_draft do |aa|
         Application.completed
       end
-      can :not_delete, ActiveAdmin::Comment
+      can :not_delete, ActiveAdmin::Comment, ActiveAdmin::Comment.for_application_visible_by(user)
     elsif user.level_3?
       can :read, AdminUser
       can [:read], Application, Application.not_in_draft do |aa|
         Application.completed
       end
-      can :not_delete, ActiveAdmin::Comment
+      can :not_delete, ActiveAdmin::Comment, ActiveAdmin::Comment.for_application_visible_by(user) do |comment|
+        user.super_admin? || user.level_3? || user.level_2? || comment.resource.created_by == user# && comment.resource.completed?
+      end
+      can :read, :all
     else
       can :manage, Application
     end

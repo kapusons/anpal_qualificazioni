@@ -105,7 +105,7 @@ it:
         updated_at: Aggiornato il
       active_admin/comment:
         author: Autore
-        resource: Risorsa
+        resource: Istanza
       certifying_agency:
         name: Nome
         created_at: Creato il
