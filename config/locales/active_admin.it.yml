@@ -11,8 +11,8 @@ it:
     save_page3: Modifica
     dashboards:
       welcome: Benvenuto nel backoffice.
-      last_applications: Ultimi aggiornamenti sulle tue istanze
-      last_comments: Ultimi commenti sulle tue istanze
+      last_applications: Ultimi aggiornamenti sulle istanze
+      last_comments: Ultime richieste sulle istanze
       nothing: Nessuno
       see_all: Vedi tutti
       detail: Mostra
@@ -21,12 +21,14 @@ it:
       parents:
         administration: Amministrazione
     applications:
-      sent_to_review: "L'istanza è stata inviata correttamente in revisione."
+      sent_to_review: "L'istanza è stata inviata correttamente."
       required_integration: "La richieta di integrazione dell'instanza è stata inviata correttamente."
+      in_progress: "L'istanza è stata presa in carico."
       accepted: "L'istanza è stata accettata correttamente."
       new_application: Aggiungi
-      integration_request: Richiesta integrazioni
+      integration_request: Richiesta integrazione
       accept: Accetta istanza
+      take: Inizia istruttoria
       confim_ada_selection: "Attenzione: confermando l'operazione alcuni valori potrebbereo essere sostituiti con quelli derivanti da Atlante."
     filters:
       location:
@@ -35,11 +37,26 @@ it:
       application:
         translations_title_contains: Titolo
         translations_description_contains: Descrizione
+        status_eq: Status
     actions:
       application:
         send: Invia
         submit: Salva e procedi
         save_without_validation: Salva come bozza
     comments:
+      integration_request_title_content: Dettaglio richiesta integrazione
+      in_integration_request_title_content: Inserisci richiesta integrazione
+      accept_title_content: Dettaglio raccomandazione
+      accept_level_2_title_content: Conferma accettazione
+      all_requests: Tutte le richieste
+      send_integration_request: Invia richiesta di integrazione
+      sent_integration_request: Richiesta di integrazione inviata correttamente
+      send_acceptance_request_with_advice: Accetta con raccomandazione
+      sent_acceptance_request_with_advice: Istanza accettata con successo
+      send_acceptance_review: Accetta
+      sent_acceptance_review: Istanza accettata con successo
+      send_acceptance_request: Accetta senza raccomandazione
+      sent_acceptance_request: Istanza accettata con successo
       author: Autore
       resource: Istanza
+      no_comments_yet: Nessuna descrizione

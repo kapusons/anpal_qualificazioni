@@ -69,6 +69,12 @@
   &.accepted {
     background-color: darkgreen;
   }
+  &.accepted_with_advice {
+    background-color: darkgreen;
+  }
+  &.in_progress {
+    background-color: orange;
+  }
 }
 
 .status_tag.admin {
@@ -84,16 +90,31 @@
   &.reviewed {
     background-color: darkgreen;
   }
+  &.accepted_with_advice {
+    background-color: darkgreen;
+  }
   &.accepted {
     background-color: darkgreen;
+  }
+  &.in_progress {
+    background-color: orange;
   }
 }
 
 .dashboard-columns {
   .column {
+    &:first-child {
+      width: 55% !important;
+    }
+    &:nth-child(2) {
+      width: 43% !important;
+    }
     float: left;
     .panel {
       margin: 10px;
+    }
+    tbody td:last-child{
+      min-width: 75px;
     }
   }
   .panel_contents h4 {

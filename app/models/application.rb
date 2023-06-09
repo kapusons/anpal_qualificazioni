@@ -23,6 +23,7 @@
 #  created_by_id        :bigint
 #  updated_by_id        :bigint
 #  status               :string(255)
+#  in_progress_by_id    :bigint
 #  title                :string(255)
 #  description          :text(65535)
 #  url                  :string(255)
@@ -33,20 +34,28 @@ class Application < ApplicationRecord
   aasm column: 'status' do
     state :draft, initial: true
     state :completed
+    state :in_progress
     state :integration_required
+    state :accepted_with_advice
     state :reviewed
     state :accepted
     event :complete do
       transitions from: [:draft, :integration_required], to: :completed
     end
+    event :in_progress do
+      transitions from: [:completed, :reviewed], to: :in_progress
+    end
     event :integrate do
-      transitions from: :completed, to: :integration_required
+      transitions from: :in_progress, to: :integration_required
+    end
+    event :accept_with_advice do
+      transitions from: :in_progress, to: :accepted_with_advice
     end
     event :review do
-      transitions from: :completed, to: :reviewed
+      transitions from: :in_progress, to: :reviewed
     end
     event :accept do
-      transitions from: :completed, to: :accepted
+      transitions from: :in_progress, to: :accepted
     end
   end
 
@@ -72,6 +81,7 @@ class Application < ApplicationRecord
   has_many :learning_opportunities
   belongs_to :created_by, class_name: "AdminUser"
   belongs_to :updated_by, class_name: "AdminUser"
+  belongs_to :in_progress_by, class_name: "AdminUser", optional: true
   has_many :comments, class_name: "ActiveAdmin::Comment", as: :resource
 
   scope :created_from, -> (current_user) { where(created_by: current_user) }
@@ -81,7 +91,7 @@ class Application < ApplicationRecord
     if user.super_admin?
       filtered = filtered.all
     elsif user.level_1?
-
+      filtered = filtered.created_from(user)
     elsif user.level_2?
       filtered = filtered.where.not(status: 'draft')
     elsif user.level_3?
@@ -94,14 +104,14 @@ class Application < ApplicationRecord
     if user.super_admin?
       all
     elsif user.level_1?
-
+      filtered = filtered.left_joins(:comments).order('comments.created_at DESC').in_order_of(:status, ["integration_required"] + Application.aasm.states.map(&:name)).distinct
     elsif user.level_2?
-      where.not(status: 'draft')
+      filtered = filtered.left_joins(:comments).where.not(status: 'draft').order("applications.updated_at DESC, #{ActiveAdmin::Comment.table_name}.created_at DESC")
     elsif user.level_3?
-      where.not(status: 'draft')
+      filtered = filtered.left_joins(:comments).where.not(status: 'draft').order("applications.updated_at DESC, #{ActiveAdmin::Comment.table_name}.created_at DESC")
     end
 
-    filtered.left_joins(:comments).order('comments.created_at DESC').in_order_of(:status, %w[integration_required completed]).distinct
+    filtered
   }
 
   STEP_1_FIELD_TO_VALIDATE = [:title, :url, :region, :nqf_level, :nqf_level_in, :nqf_level_out, :isced_ids, :credit]

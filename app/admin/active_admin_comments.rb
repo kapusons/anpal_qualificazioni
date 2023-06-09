@@ -39,8 +39,41 @@ ActiveAdmin.after_load do |app|
 
         # Redirect to the resource show page after comment creation
         def create
+          if params[:commit] == I18n.t("active_admin.comments.send_acceptance_request")
+            flash[:notice] = I18n.t("active_admin.comments.sent_acceptance_request")
+            Application.find_by(id: params.dig(:active_admin_comment, :resource_id)).accept!
+            redirect_back(fallback_location: active_admin_root) && return
+          end
+
+          if params[:commit] == I18n.t("active_admin.comments.send_acceptance_review")
+            flash[:notice] =  I18n.t("active_admin.comments.sent_acceptance_review")
+            Application.find_by(id: params.dig(:active_admin_comment, :resource_id)).review!
+            redirect_back(fallback_location: active_admin_root) && return
+          end
           create! do |success, failure|
             success.html do
+              if current_admin_user.level_3?
+                if params[:commit] == I18n.t("active_admin.comments.send_integration_request")
+                  flash[:notice] = I18n.t("active_admin.comments.sent_integration_request")
+                  resource.resource.integrate!
+                elsif params[:commit] == I18n.t("active_admin.comments.send_acceptance_request_with_advice")
+                  flash[:notice] = I18n.t("active_admin.comments.sent_acceptance_request_with_advice")
+                  resource.resource.accept_with_advice!
+                elsif params[:commit] == I18n.t("active_admin.comments.send_acceptance_request")
+                  # teoricamente qui non entra mai
+                  flash[:notice] = I18n.t("active_admin.comments.sent_acceptance_request")
+                  resource.resource.accept!
+                end
+              elsif current_admin_user.level_2?
+                if params[:commit] == I18n.t("active_admin.comments.send_integration_request")
+                  flash[:notice] = I18n.t("active_admin.comments.sent_integration_request")
+                  resource.resource.integrate!
+                elsif params[:commit] == I18n.t("active_admin.comments.send_integration_request")
+                  # teoricamente qui non entra mai
+                  flash[:notice] =  I18n.t("active_admin.comments.sent_integration_request")
+                  resource.resource.review!
+                end
+              end
               redirect_back fallback_location: active_admin_root
             end
             failure.html do
@@ -62,7 +95,7 @@ ActiveAdmin.after_load do |app|
         end
       end
 
-      permit_params :body, :namespace, :resource_id, :resource_type
+      permit_params :body, :namespace, :resource_id, :resource_type, :status
 
       filter :body
       # Non va bene perchè un livello 1 vede un altro livello 1

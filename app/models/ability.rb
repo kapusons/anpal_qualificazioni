@@ -18,26 +18,46 @@ class Ability
       can :read, Application, Application.created_from(user) do |application|
         application.created_by == user
       end
-      can :not_delete, ActiveAdmin::Comment, ActiveAdmin::Comment.for_application_visible_by(user) do |comment|
-        comment.resource.created_by == user
+      can :read, ActiveAdmin::Comment, ActiveAdmin::Comment.for_application_visible_by(user) do |comment|
+        comment.resource.created_by == user && comment.resource.integration_request?
       end
-      can :create, ActiveAdmin::Comment, ActiveAdmin::Comment.joins("INNER JOIN applications as a on a.id = resource_id AND resource_type = 'Application'") do |comment|
-        comment.resource.created_by == user# && comment.resource.completed?
-      end
+      # can :not_delete, ActiveAdmin::Comment, ActiveAdmin::Comment.for_application_visible_by(user) do |comment|
+      #   comment.resource.created_by == user
+      # end
+      # can :create, ActiveAdmin::Comment, ActiveAdmin::Comment.joins("INNER JOIN applications as a on a.id = resource_id AND resource_type = 'Application'") do |comment|
+      #   comment.resource.created_by == user# && comment.resource.completed?
+      # end
       cannot :read, Rule
     elsif user.level_2?
       can [:read], Application, Application.not_in_draft do |aa|
         Application.completed
       end
-      can :not_delete, ActiveAdmin::Comment, ActiveAdmin::Comment.for_application_visible_by(user)
+      can :not_delete, ActiveAdmin::Comment, ActiveAdmin::Comment.for_application_visible_by(user) do |comment|
+        user.super_admin? || user.level_3? || user.level_2? || comment.resource.created_by == user
+      end
+      # non funziona
+      # cannot :create, ActiveAdmin::Comment, ActiveAdmin::Comment.for_application_visible_by(user) do |comment|
+      #   comment.resource.in_progress?
+      # end
     elsif user.level_3?
       can :read, AdminUser
       can [:read], Application, Application.not_in_draft do |aa|
-        Application.completed
+        Application.not_in_draft
       end
+      # can :not_delete, ActiveAdmin::Comment, ActiveAdmin::Comment.for_application_visible_by(user) do |comment|
+      #   user.super_admin? || user.level_3? || user.level_2? || comment.resource.created_by == user# && comment.resource.completed?
+      # end
+      # cannot :create, ActiveAdmin::Comment, ActiveAdmin::Comment.for_application_visible_by(user) do |comment|
+      #   comment.resource.integration_required?
+      # end
       can :not_delete, ActiveAdmin::Comment, ActiveAdmin::Comment.for_application_visible_by(user) do |comment|
-        user.super_admin? || user.level_3? || user.level_2? || comment.resource.created_by == user# && comment.resource.completed?
+        user.super_admin? || user.level_3? || user.level_2? || comment.resource.created_by == user
       end
+      # non funziona
+      # cannot :create, ActiveAdmin::Comment, ActiveAdmin::Comment.for_application_visible_by(user) do |comment|
+      #   comment.resource.in_progress?
+      # end
+
       can :read, :all
     else
       can :manage, Application

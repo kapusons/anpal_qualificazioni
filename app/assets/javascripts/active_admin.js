@@ -28,4 +28,28 @@ $(document).ready(function () {
             dataType: 'json'
         });
     });
+
+    let $commentsInt = $("div[id^=active_admin_comments_for_application_][class*=integration_form]")
+    let $commentsAcc = $("div[id^=active_admin_comments_for_application_][class*=accept_form]")
+    $commentsInt.hide()
+    $commentsAcc.hide()
+    $('button.button.integration_request').on("click", function (){
+        if ($commentsInt.is(":visible")) {
+            $commentsInt.hide();
+        } else {
+            $commentsInt.show();
+            $commentsAcc.hide();
+        }
+
+    });
+    //
+    $('button.button.accept').on("click", function (){
+        if ($commentsAcc.is(":visible")) {
+            $commentsAcc.hide();
+        } else {
+            $commentsAcc.show();
+            $commentsInt.hide();
+        }
+
+    });
 });
