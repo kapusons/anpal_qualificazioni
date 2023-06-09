@@ -5,7 +5,7 @@ ActiveAdmin.register_page "Dashboard" do
 
     div class: "blank_slate_container", id: "dashboard_default_message" do
       span class: "blank_slate" do
-        span I18n.t('active_admin.dashboards.welcome').concat(current_admin_user.level_1? ? "<br/><br/>" : "").concat(current_admin_user.level_1? ? (link_to I18n.t('active_admin.dashboards.create'),  new_admin_application_path) : "").html_safe
+        span I18n.t('active_admin.dashboards.welcome').concat(current_admin_user.level_1? ? "<br/><br/>" : "").concat(current_admin_user.level_1? ? (link_to I18n.t('active_admin.dashboards.create'),  new_admin_application_path, class: 'button primary') : "").html_safe
       end
     end
 
