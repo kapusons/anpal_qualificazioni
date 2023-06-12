@@ -10,4 +10,9 @@
 #  updated_at  :datetime         not null
 #
 class CpIstat < ApplicationRecord
+  validates :code, :description, :name, presence: true
+
+  def display_name
+    "#{self.code} - #{self.name}"
+  end
 end

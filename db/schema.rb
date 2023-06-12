@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_06_08_104339) do
+ActiveRecord::Schema[7.0].define(version: 2023_06_12_105524) do
   create_table "action_text_rich_texts", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name", null: false
     t.text "body", size: :long
@@ -150,6 +150,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_08_104339) do
     t.bigint "updated_by_id"
     t.string "status"
     t.bigint "in_progress_by_id"
+    t.bigint "source_id"
     t.index ["admission_id"], name: "index_applications_on_admission_id"
     t.index ["certifying_agency_id"], name: "index_applications_on_certifying_agency_id"
     t.index ["created_by_id"], name: "index_applications_on_created_by_id"
@@ -162,6 +163,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_08_104339) do
     t.index ["nqf_level_out_id"], name: "index_applications_on_nqf_level_out_id"
     t.index ["region_id"], name: "index_applications_on_region_id"
     t.index ["rule_id"], name: "index_applications_on_rule_id"
+    t.index ["source_id"], name: "index_applications_on_source_id"
     t.index ["updated_by_id"], name: "index_applications_on_updated_by_id"
   end
 
@@ -256,6 +258,12 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_08_104339) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "sources", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "applications", "admissions"
@@ -268,4 +276,5 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_08_104339) do
   add_foreign_key "applications", "nqf_levels"
   add_foreign_key "applications", "regions"
   add_foreign_key "applications", "rules"
+  add_foreign_key "applications", "sources"
 end

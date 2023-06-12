@@ -24,6 +24,7 @@
 #  updated_by_id        :bigint
 #  status               :string(255)
 #  in_progress_by_id    :bigint
+#  source_id            :bigint
 #  title                :string(255)
 #  description          :text(65535)
 #  url                  :string(255)
@@ -71,6 +72,7 @@ class Application < ApplicationRecord
   belongs_to :nqf_level_out, optional: true
   belongs_to :language, optional: true
   belongs_to :rule, optional: true
+  belongs_to :source, optional: true
   belongs_to :admission, optional: true
   has_many :application_atecos
   has_many :atecos, through: :application_atecos
@@ -124,10 +126,10 @@ class Application < ApplicationRecord
   validates :isced_ids, presence: true, if: :need_validate_1?
   validates :credit, numericality: { only_integer: true, allow_blank: true }, if: :need_validate_1?
 
-  STEP_2_FIELD_TO_VALIDATE = [:language, :rule, :admission, :certifying_agency, :eqf]
+  STEP_2_FIELD_TO_VALIDATE = [:language, :source, :admission, :certifying_agency, :eqf]
   # validates :expiration_date, presence: true, if: -> { on_step(2) }
   validates :language, presence: true, if: :need_validate_2?
-  validates :rule, presence: true, if: :need_validate_2?
+  validates :source, presence: true, if: :need_validate_2?
   validates :admission, presence: true, if: :need_validate_2?
   validates :certifying_agency, presence: true, if: :need_validate_2?
   validates :eqf, presence: true, if: :need_validate_2?

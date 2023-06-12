@@ -46,12 +46,15 @@ it:
       rule:
         one: Collegamento con i relativi supplementi
         other: Collegamenti con i relativi supplementi
+      source:
+        one: Fonte di informazione
+        other: Fonti di informazione
       learning_opportunity:
         one: Learning opportunity
         other: Learning opportunities
     attributes:
       application:
-        atlante: Seleziona ADA già presenti su atlante per autocompletare alcuni campi
+        atlante: Seleziona una qualificazione già presenti su atlante per autocompletare alcuni campi
         atlante_code: Codice selezionato da atlante
         atlante_title: Titolo selezionato da atlante
         atlante_region: Regione selezionata da atlante
@@ -77,6 +80,7 @@ it:
         updated_by: Aggiornato da
         in_progress_by: In lavorazione da
         rule: Collegamento con i relativi supplementi
+        source: Fonte di informazione
         region: Regione
         eqf: Livello dell'EQF
         created_at: Creato il
@@ -144,6 +148,10 @@ it:
         created_at: Creato il
         updated_at: Aggiornato il
       rule:
+        name: Nome
+        created_at: Creato il
+        updated_at: Aggiornato il
+      source:
         name: Nome
         created_at: Creato il
         updated_at: Aggiornato il

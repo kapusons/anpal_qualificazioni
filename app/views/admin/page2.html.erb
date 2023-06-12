@@ -22,12 +22,12 @@
       f.input :language, as: :select, collection: Language.all.map { |a| [a.name, a.id] }, required: true
     end
     f.inputs class: "inputs columns" do
-      f.input :rule, as: :select, collection: Rule.all.map { |a| [a.name, a.id] }, required: true
+      f.input :source, as: :select, collection: Source.all.map { |a| [a.name, a.id] }, required: true
       f.input :admission, as: :select, collection: Admission.all.map { |a| [a.name, a.id] }, required: true
     end
     f.inputs class: "inputs columns" do
-      f.input :ateco_ids, as: :select, collection: Ateco.all.sort_by { |v| Gem::Version.new(v.code_category) }.map { |a| ["#{a.code_category} - #{a.description_category}", a.id] }, multiple: true
-      f.input :cp_istat_ids, as: :select, collection: CpIstat.all.sort_by { |v| Gem::Version.new(v.code) }.map { |a| ["#{a.code} - #{a.name}", a.id] }, multiple: true
+      f.input :ateco_ids, as: :select, collection: Ateco.all.sort_by { |v| Gem::Version.new(v.code_category) }.map { |a| [a.display_name, a.id] }, multiple: true
+      f.input :cp_istat_ids, as: :select, collection: CpIstat.all.sort_by { |v| Gem::Version.new(v.code) }.map { |a| [a.display_name, a.id] }, multiple: true
     end
     f.actions do
       f.action :submit, label: I18n.t("active_admin.actions.application.submit")

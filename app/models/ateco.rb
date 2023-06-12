@@ -14,4 +14,8 @@
 #
 class Ateco < ApplicationRecord
   validates :code, :description, :code_micro, :description_micro, :code_category, :description_category, presence: true
+
+  def display_name
+    "#{self.code_category} - #{self.description_category}"
+  end
 end

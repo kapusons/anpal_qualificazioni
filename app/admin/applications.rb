@@ -3,7 +3,7 @@ ActiveAdmin.register Application do
   # CUSTOM_ACTIONS = [ :page1, :page2, :save_page1, :save_page2]
   permit_params :id, :atlante, :atlante_title, :expiration_date, :region_id, :eqf_id, :certifying_agency_id, :guarantee_entity_id,
                 :atlante_code, :atlante_region,
-                :credit, :guarantee_process, :nqf_level_id, :nqf_level_in_id, :nqf_level_out_id, :language_id, :rule_id,
+                :credit, :guarantee_process, :nqf_level_id, :nqf_level_in_id, :nqf_level_out_id, :language_id, :rule_id, :source_id,
                 :admission_id, ateco_ids: [], cp_istat_ids: [], isced_ids: [], translations_attributes: [:id, :locale,
                                                                                                          :title, :description, :url], learning_opportunities_attributes: [:id, :_destroy, :application_id,
                                                                                                                                                                           :location, :duration, :manner, :institution]
@@ -215,6 +215,7 @@ ActiveAdmin.register Application do
       row :nqf_level_out
       row :language
       row :rule
+      row :source
       row :admission
       row :atecos
       row :cp_istats
@@ -271,10 +272,15 @@ ActiveAdmin.register Application do
     end
 
     def get_atlante_request(url)
+      begin
       response = Faraday.get(url, {}, { 'Accept' => '*/*' })
       content = response.body.force_encoding("UTF-8")
       content.gsub!("\xEF\xBB\xBF".force_encoding("UTF-8"), '')
       JSON.parse(content)
+      rescue
+        {}
+      end
+
     end
 
   end
