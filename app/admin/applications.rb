@@ -103,14 +103,16 @@ ActiveAdmin.register Application do
     # Per salvarmi i precedente valore
     @application.store_version("step2")
     @application.assign_attributes(permitted_params.dig(:application) || {})
-    @application.skip_validation = params[:commit] == I18n.t("active_admin.actions.application.save_without_validation")
+    # @application.skip_validation = params[:commit] == I18n.t("active_admin.actions.application.save_without_validation")
     if @application.save
-      if @application.skip_validation
-        render template: 'admin/page2', locals: { url: save_page2_admin_application_path(@application) }, layout: "active_admin"
-      else
-        @application.learning_opportunities.blank? ? @application.learning_opportunities.build : []
-        render template: 'admin/page3', locals: { url: save_page3_admin_application_path(@application) }, layout: "active_admin"
-      end
+      # if @application.skip_validation
+      #   render template: 'admin/page2', locals: { url: save_page2_admin_application_path(@application) }, layout: "active_admin"
+      # else
+      #   @application.learning_opportunities.blank? ? @application.learning_opportunities.build : []
+      #   render template: 'admin/page3', locals: { url: save_page3_admin_application_path(@application) }, layout: "active_admin"
+      # end
+      @application.complete!
+      redirect_to admin_applications_path, notice: I18n.t('active_admin.applications.sent_to_review')
 
     else
       render template: 'admin/page2', locals: { url: save_page2_admin_application_path(@application) }, layout: "active_admin"
@@ -128,10 +130,9 @@ ActiveAdmin.register Application do
     @application = Application.find(params[:id])
     @application.step = 3
     # Per salvarmi i precedente valore
-    @application.store_version("step3")
+    # @application.store_version("step3")
     @application.assign_attributes(permitted_params.dig(:application) || {})
     if @application.save
-      @application.complete!
       redirect_to admin_applications_path, notice: I18n.t('active_admin.applications.sent_to_review')
     else
       @application.learning_opportunities.blank? ? @application.learning_opportunities.build : []

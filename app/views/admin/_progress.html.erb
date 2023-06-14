@@ -1,5 +1,5 @@
 <div class="nav-progress">
-  <% [1, 2, 3].each do |current_step| %>
+  <% [1, 2].each do |current_step| %>
     <%
       klass = step == current_step ? 'active' : (step > current_step ? 'complete' : '')
       klass += " #{@application.persisted? ? "" : "without_link"}"

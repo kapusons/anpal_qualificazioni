@@ -17,7 +17,7 @@ module ActiveAdmin
         obj.reverse.each do |a|
           els[id] = [] if els[id].nil?
           els[id] << a
-          id += 1 if a.event == "step3"
+          id += 1 if a.event == "step2"
         end
         last_key = els.keys.max
         if els[last_key].respond_to?(:each)

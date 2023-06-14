@@ -203,8 +203,10 @@ class Application < ApplicationRecord
   end
   
   def store_version(step)
-    self.paper_trail_event = step
-    self.paper_trail.save_with_version
+    if self.integration_required?
+      self.paper_trail_event = step
+      self.paper_trail.save_with_version
+    end
   end
 
   def meta_objects
