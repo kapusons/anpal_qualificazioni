@@ -32,6 +32,39 @@
 class Application < ApplicationRecord
   include AASM
 
+  has_paper_trail if: Proc.new { |t| false },
+                  meta: { meta_objects: proc { |a| a.meta_objects } },
+                  ignore: [:updated_at],
+                  skip: {
+                    title: proc { |a| true }, # in meta_objects
+                    url: proc { |a| true }, # in meta_objects
+                    meta_objects: proc { |a| false }, # all step
+                    region_id: proc { |a| a.step != 1 },
+                    credit: proc { |a| a.step != 1 },
+                    nqf_level_id: proc { |a| a.step != 1 },
+                    nqf_level_in_id: proc { |a| a.step != 1 },
+                    nqf_level_out_id: proc { |a| a.step != 1 },
+                    eqf_id: proc { |a| a.step != 2 },
+                    certifying_agency_id: proc { |a| a.step != 2 },
+                    guarantee_entity_id: proc { |a| a.step != 2 },
+                    language_id: proc { |a| a.step != 2 },
+                    source_id: proc { |a| a.step != 2 },
+                    admission_id: proc { |a| a.step != 2 },
+                    id: proc { |a| true },
+                    created_at: proc { |a| true },
+                    updated_at:  proc { |a| true },
+                    expiration_date:  proc { |a| true },
+                    atlante_code:  proc { |a| true },
+                    atlante_title:  proc { |a| true },
+                    guarantee_process:  proc { |a| true },
+                    rule_id:  proc { |a| true },
+                    created_by_id:  proc { |a| true },
+                    updated_by_id:  proc { |a| true },
+                    status:  proc { |a| true },
+                    in_progress_by_id:  proc { |a| true },
+                    description:  proc { |a| true },
+                  }
+
   aasm column: 'status' do
     state :draft, initial: true
     state :completed
@@ -149,7 +182,7 @@ class Application < ApplicationRecord
   accepts_nested_attributes_for :learning_opportunities, allow_destroy: true, reject_if: :all_blank
 
   class Translation
-    has_rich_text :description
+    # has_rich_text :description
   end
 
   def on_step(step_number)
@@ -162,6 +195,28 @@ class Application < ApplicationRecord
 
   def self.human_enum_name(enum_name, enum_value)
     I18n.t("activerecord.attributes.#{model_name.i18n_key}.#{enum_name.to_s.pluralize}.#{enum_value}")
+  end
+
+  def version_fields
+    [:region, :nqf_level, :nqf_level_in, :nqf_level_out, :credit] +
+      [:language, :source, :admission, :certifying_agency, :eqf]
+  end
+  
+  def store_version(step)
+    self.paper_trail_event = step
+    self.paper_trail.save_with_version
+  end
+
+  def meta_objects
+    hash = {
+      isced_ids: isced_ids,
+      ateco_ids: ateco_ids,
+      cp_istat_ids: cp_istat_ids,
+    }
+    Application.translated_attribute_names.each do |field|
+      hash[field] = I18n.available_locales.inject({}) { |r, locale| r.merge({ locale => self.send("#{field}_translations").try(:[], locale) }) }
+    end
+    hash
   end
 
 end

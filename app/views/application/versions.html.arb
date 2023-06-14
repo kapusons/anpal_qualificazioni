@@ -1,0 +1,51 @@
+panel(I18n.t("activerecord.attributes.paper_trail/version.events.details")) do
+  table_for_versioning(versions, i18n: ::PaperTrail::Version, class: "index_table") do
+    row(:id)
+    # row(:whodunnit) do |record|
+    #  record.send(ActiveAdminVersioning.configuration.whodunnit_attribute_name).presence || t("views.version.unknown_user")
+    # end
+    row(:event, :event_i18n) do
+      I18n.t("activerecord.attributes.paper_trail/version.events.update")
+    end
+    t = ""
+    Rails.logger.info self.inspect
+
+    (self.arbre_context.assigns.dig(:application).version_fields + [:isceds, :atecos, :cp_istats]).each do |field|
+      row field do |a|
+        current_instance = a.reify
+        item = Application.find(a.item_id)
+        if current_instance.send(field).is_a?(ActiveRecord::Relation)
+          field2 = field.to_s.gsub(/s$/, '_ids')
+          if a.meta_objects[field2.to_s].nil? || item.send(field2).sort == a.meta_objects[field2.to_s].sort
+            r = "="
+          else
+            r = "<s>#{field.to_s.singularize.camelize.constantize.where(id: a.meta_objects[field2.to_s]).order(:id).map { |a| a.try(:display_name) || a.try(:name) }.join('</br>')}</s></br>#{item.send(field).sort.map { |a| a.try(:display_name) || a.try(:name) }.join('</br>')}".html_safe
+          end
+        elsif current_instance.send(field).respond_to?(:display_name)
+          r = current_instance.send(field).display_name == item.send(field).display_name ? '=' : "<s>#{current_instance.send(field).display_name}</s></br>#{item.send(field).display_name}".html_safe
+        elsif current_instance.send(field).respond_to?(:name)
+          r = current_instance.send(field).name == item.send(field).name ? '=' : "<s>#{current_instance.send(field).name}</s></br>#{item.send(field).name}".html_safe
+        elsif current_instance.send(field) != item.send(field)
+          r = "<s>#{current_instance.send(field)}</s></br>#{item.send(field)}".html_safe
+        else
+          r = "="
+        end
+        r
+      end
+    end
+
+    translate_attributes_table_with_label_for [versions.first] do
+      (Application.translated_attribute_names - [:description]).each do |field|
+        row field do |current_instance, item, locale|
+          if current_instance.meta_objects[field.to_s][locale] != item.translation_for(locale).send(field)
+            "<s>#{current_instance.meta_objects[field.to_s][locale]}</s></br>#{item.translation_for(locale).send(field)}".html_safe
+          else
+            "="
+          end
+        end
+      end
+
+    end
+
+  end
+end

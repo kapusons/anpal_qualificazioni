@@ -10,7 +10,7 @@ module ActiveAdmin
       builder_method :translate_attributes_table_with_label_for
 
       def row(attr, label = '', &block)
-          ::I18n.available_locales.each_with_index do |locale, index|
+        ::I18n.available_locales.each_with_index do |locale, index|
           @table << tr(class: "row row-#{attr.to_s}") do
             if index == 0
               th :rowspan => ::I18n.available_locales.length do
@@ -24,7 +24,12 @@ module ActiveAdmin
                 end
               end
               td do
-                resource.translation_for(locale).send(attr) || empty_value
+                if block_given?
+                  block.call(@collection.first, resource, locale.to_s)
+                else
+                  resource.translation_for(locale).send(attr) || empty_value
+                end
+
               end
             end
           end

@@ -1,4 +1,12 @@
 GIT
+  remote: https://github.com/baarkerlounger/active_admin_versioning.git
+  revision: 7773fcb862b4fbc290f05ff647125c5218162356
+  specs:
+    active_admin_versioning (0.4.9)
+      activeadmin (>= 2.9)
+      paper_trail (>= 4.2.0)
+
+GIT
   remote: https://github.com/langelone/activeadmin-translate.git
   revision: cbd344b4a4f53fa680176cf7a1d9afbde90adc33
   specs:
@@ -247,6 +255,9 @@ GEM
     nokogiri (1.14.2-x86_64-linux)
       racc (~> 1.4)
     orm_adapter (0.5.0)
+    paper_trail (14.0.0)
+      activerecord (>= 6.0)
+      request_store (~> 1.4)
     public_suffix (5.0.1)
     puma (5.6.5)
       nio4r (~> 2.0)
@@ -363,6 +374,7 @@ PLATFORMS
 
 DEPENDENCIES
   aasm
+  active_admin_versioning!
   activeadmin
   activeadmin-translate!
   activeadmin_addons
@@ -388,6 +400,7 @@ DEPENDENCIES
   kaminari-i18n
   letter_opener
   mysql2 (~> 0.5)
+  paper_trail
   puma (~> 5.0)
   rails (~> 7.0.4, >= 7.0.4.3)
   rails-i18n

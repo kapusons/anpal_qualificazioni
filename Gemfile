@@ -87,3 +87,5 @@ gem 'roo'
 gem 'aasm'
 gem 'kaminari-i18n'
 gem "font-awesome-rails"
+gem 'paper_trail'
+gem 'active_admin_versioning', git: 'https://github.com/baarkerlounger/active_admin_versioning.git'

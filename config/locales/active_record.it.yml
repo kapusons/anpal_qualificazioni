@@ -1,6 +1,9 @@
 it:
   activerecord:
     models:
+      paper_trail/version:
+        one: Storico modifiche
+        other: Storico modifiche
       application:
         one: Istanza
         other: Istanze
@@ -53,6 +56,53 @@ it:
         one: Learning opportunity
         other: Learning opportunities
     attributes:
+      paper_trail/version:
+        event: Evento
+        atlante: Seleziona una qualificazione già presenti su atlante per autocompletare alcuni campi
+        atlante_code: Codice selezionato da atlante
+        atlante_title: Titolo selezionato da atlante
+        atlante_region: Regione selezionata da atlante
+        title: Titolo
+        isceds: Settori
+        isced_ids: Settori
+        advice: Raccomandazione
+        credit: Unità di credito
+        certifying_agency: Ente certificatore
+        guarantee_entity: Organismo esterno di garanzia qualità
+        admission: Requisito di ammissione
+        atecos: Ateco
+        ateco_ids: Ateco
+        cp_istats: CP Istat 2021
+        cp_istat_ids: CP Istat 2021
+        url: URL della qualificazione
+        nqf_level: Livello NQF
+        nqf_level_in: Livello NQF in
+        nqf_level_out: Livello NQF out
+        language: Lingua delle informazioni
+        created_by: Creato da
+        updated_by: Aggiornato da
+        in_progress_by: In lavorazione da
+        rule: Collegamento con i relativi supplementi
+        source: Fonte di informazione
+        region: Regione
+        eqf: Livello dell'EQF
+        statuses:
+          draft: Bozza
+          completed: Inviata
+          integration_required: Richiesta integrazione
+          reviewed: Accettata da INAPP
+          accepted: Accettata
+          in_progress: In lavorazione
+          accepted_with_advice: Accettata con raccomandazione
+        comments: Richieste
+        events:
+          update: Richiesta integrazione
+          details: Ultime modifiche
+        whodunnit: Creato da
+        created_at: Creato il
+        updated_at: Aggiornato il
+        object: Oggetto
+        item_type: Tipo di oggetto
       application:
         atlante: Seleziona una qualificazione già presenti su atlante per autocompletare alcuni campi
         atlante_code: Codice selezionato da atlante

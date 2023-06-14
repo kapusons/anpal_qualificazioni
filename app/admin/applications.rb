@@ -52,6 +52,8 @@ ActiveAdmin.register Application do
   collection_action :create, method: :post do
     @application = build_resource
     @application.step = 1
+    # Per salvarmi i precedente valore
+    @application.store_version("step1")
     @application.skip_validation = params[:commit] == I18n.t("active_admin.actions.application.save_without_validation")
     if create_resource(@application)
       if @application.skip_validation
@@ -73,9 +75,11 @@ ActiveAdmin.register Application do
 
   member_action :save_page1, method: [:put, :patch] do
     @application = Application.find(params[:id])
+    @application.step = 1
+    # Per salvarmi i precedente valore
+    @application.store_version("step1")
     @application.assign_attributes(permitted_params.dig(:application) || {})
     @application.skip_validation = params[:commit] == I18n.t("active_admin.actions.application.save_without_validation")
-    @application.step = 1
     if @application.save
       if @application.skip_validation
         render template: 'admin/page1', locals: { adas: adas, url: save_page1_admin_application_path(@application) }, layout: "active_admin"
@@ -96,6 +100,8 @@ ActiveAdmin.register Application do
   member_action :save_page2, method: [:put, :patch] do
     @application = Application.find(params[:id])
     @application.step = 2
+    # Per salvarmi i precedente valore
+    @application.store_version("step2")
     @application.assign_attributes(permitted_params.dig(:application) || {})
     @application.skip_validation = params[:commit] == I18n.t("active_admin.actions.application.save_without_validation")
     if @application.save
@@ -121,6 +127,8 @@ ActiveAdmin.register Application do
   member_action :save_page3, method: [:put, :patch] do
     @application = Application.find(params[:id])
     @application.step = 3
+    # Per salvarmi i precedente valore
+    @application.store_version("step3")
     @application.assign_attributes(permitted_params.dig(:application) || {})
     if @application.save
       @application.complete!
@@ -133,9 +141,11 @@ ActiveAdmin.register Application do
 
   member_action :update1, method: [:put, :patch] do
     @application = Application.find(params[:id])
+    @application.step = 1
+    # Per salvarmi i precedente valore
+    @application.store_version("step1")
     @application.assign_attributes(permitted_params.dig(:application) || {})
     @application.skip_validation = params[:commit] == I18n.t("active_admin.actions.application.save_without_validation")
-    @application.step = 1
     if @application.save
       render template: 'admin/page2', locals: { url: save_page2_admin_application_path(@application) }, layout: "active_admin"
     else
@@ -203,7 +213,6 @@ ActiveAdmin.register Application do
         #   r.description
         # end
       end
-      row :isceds
       row :region
       row :eqf
       row :certifying_agency
@@ -214,7 +223,7 @@ ActiveAdmin.register Application do
       row :nqf_level_in
       row :nqf_level_out
       row :language
-      row :rule
+      # row :rule
       row :source
       row :admission
       row :atecos
@@ -273,10 +282,23 @@ ActiveAdmin.register Application do
 
     def get_atlante_request(url)
       begin
-      response = Faraday.get(url, {}, { 'Accept' => '*/*' })
-      content = response.body.force_encoding("UTF-8")
-      content.gsub!("\xEF\xBB\xBF".force_encoding("UTF-8"), '')
-      JSON.parse(content)
+        uri = URI.parse(url)
+        request = Net::HTTP::Get.new(uri)
+        request["Accept"] = "*/*"
+
+        request.delete("user-agent")
+
+        req_options = {
+          use_ssl: uri.scheme == "https",
+        }
+
+        response = Net::HTTP.start(uri.hostname, uri.port, req_options) do |http|
+          http.request(request)
+        end
+
+        content = response.body.force_encoding("UTF-8")
+        content.gsub!("\xEF\xBB\xBF".force_encoding("UTF-8"), '')
+        JSON.parse(content)
       rescue
         {}
       end

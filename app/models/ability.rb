@@ -57,7 +57,9 @@ class Ability
       # cannot :create, ActiveAdmin::Comment, ActiveAdmin::Comment.for_application_visible_by(user) do |comment|
       #   comment.resource.in_progress?
       # end
-
+      can :versions, Application, Application.not_in_draft do |aa|
+        Application.not_in_draft
+      end
       can :read, :all
     else
       can :manage, Application
