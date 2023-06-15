@@ -12,6 +12,7 @@
 #  created_at    :datetime         not null
 #  updated_at    :datetime         not null
 #  status        :string(255)
+#  attachment    :string(255)
 #
 require_dependency ActiveAdmin::Engine.root.join("lib", "active_admin", "orm", "active_record", "comments", "comment")
 
@@ -24,6 +25,8 @@ module ActiveAdmin
     belongs_to :author, polymorphic: true
 
     validates_presence_of :body, :namespace, :resource
+
+    mount_uploader :attachment, AttachmentUploader
 
     before_create :set_resource_type
 

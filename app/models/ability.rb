@@ -24,9 +24,9 @@ class Ability
       # can :not_delete, ActiveAdmin::Comment, ActiveAdmin::Comment.for_application_visible_by(user) do |comment|
       #   comment.resource.created_by == user
       # end
-      # can :create, ActiveAdmin::Comment, ActiveAdmin::Comment.joins("INNER JOIN applications as a on a.id = resource_id AND resource_type = 'Application'") do |comment|
-      #   comment.resource.created_by == user# && comment.resource.completed?
-      # end
+      can :download, ActiveAdmin::Comment, ActiveAdmin::Comment.for_application_visible_by(user) do |comment|
+        comment.status == "integration_request" && comment.resource.created_by == user
+      end
       cannot :read, Rule
     elsif user.level_2?
       can [:read], Application, Application.inapp do |aa|
@@ -34,6 +34,9 @@ class Ability
       end
       can :not_delete, ActiveAdmin::Comment, ActiveAdmin::Comment.for_application_visible_by(user) do |comment|
         user.super_admin? || user.level_3? || user.level_2? || comment.resource.created_by == user
+      end
+      can :download, ActiveAdmin::Comment, ActiveAdmin::Comment.for_application_visible_by(user) do |comment|
+        comment.status == "integration_request" || (comment.status == "inapp" && comment.resource.inapp?)
       end
       # non funziona
       # cannot :create, ActiveAdmin::Comment, ActiveAdmin::Comment.for_application_visible_by(user) do |comment|
@@ -59,6 +62,9 @@ class Ability
       # end
       can :versions, Application, Application.not_in_draft do |aa|
         Application.not_in_draft
+      end
+      can :download, ActiveAdmin::Comment, ActiveAdmin::Comment.for_application_visible_by(user) do |comment|
+        comment.status == "integration_request" || comment.status == "inapp"
       end
       can :read, :all
     else

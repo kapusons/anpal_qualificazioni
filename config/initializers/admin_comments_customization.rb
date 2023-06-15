@@ -108,7 +108,12 @@ ActiveAdmin::Comments::Views::Comments.class_eval do
         end
       end
       div class: "active_admin_comment_body" do
-        simple_format comment.body
+        div simple_format(comment.body)
+        if comment.attachment.present?
+          h4 class: "active_admin_comment_download" do
+            link_to I18n.t("active_admin.comments.download_attachment"), download_admin_comment_url(comment.id)
+          end
+        end
       end
     end
   end
@@ -140,6 +145,7 @@ ActiveAdmin::Comments::Views::Comments.class_eval do
         f.input :resource_id, as: :hidden, input_html: { value: parent.resource.id }
         f.input :status, as: :hidden, input_html: { value: self.parent.options[:status] == "integration_form" ? "integration_request" : (self.parent.options[:status] == "accept_form" ? "accept" : "inapp") }
         f.input :body, label: false, input_html: { size: "80x8" }
+        f.input :attachment, as: :file
       end
 
       f.actions do

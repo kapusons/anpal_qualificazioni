@@ -31,6 +31,16 @@ ActiveAdmin.after_load do |app|
         comment.author = current_active_admin_user
       end
 
+      member_action :download, method: :get do
+        comment = ActiveAdmin::Comment.find(params[:id])
+        if authorized?(:download, comment)
+          send_file "#{Rails.root}/public#{comment.attachment.to_s}", x_sendfile: true, disposition: 'attachment'
+        else
+          flash[:notice] = I18n.t("active_admin.access_denied.message")
+          redirect_back(fallback_location: active_admin_root) && return
+        end
+      end
+
       controller do
         # Prevent N+1 queries
         def scoped_collection
@@ -99,7 +109,7 @@ ActiveAdmin.after_load do |app|
         end
       end
 
-      permit_params :body, :namespace, :resource_id, :resource_type, :status
+      permit_params :body, :namespace, :resource_id, :resource_type, :status, :attachment
 
       filter :body
       # Non va bene perchè un livello 1 vede un altro livello 1

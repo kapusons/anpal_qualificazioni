@@ -166,6 +166,7 @@ it:
       active_admin/comment:
         author: Autore
         resource: Istanza
+        attachment: Allegato
       certifying_agency:
         name: Nome
         created_at: Creato il

@@ -49,6 +49,7 @@ it:
         submit: Salva e procedi
         save_without_validation: Salva come bozza
     comments:
+      download_attachment: Download allegato
       integration_request_title_content: Dettaglio richiesta integrazione
       inapp_title_content: Parere INAPP
       in_integration_request_title_content: Inserisci richiesta integrazione
