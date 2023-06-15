@@ -81,7 +81,7 @@ it:
         language: Lingua delle informazioni
         created_by: Creato da
         updated_by: Aggiornato da
-        in_progress_by: In lavorazione da
+        in_progress_by: In istruttoria da
         rule: Collegamento con i relativi supplementi
         source: Fonte di informazione
         region: Regione
@@ -92,6 +92,7 @@ it:
           integration_required: Richiesta integrazione
           reviewed: Accettata da INAPP
           accepted: Accettata
+          inapp: In lavorazione da INAPP
           in_progress: In lavorazione
           accepted_with_advice: Accettata con raccomandazione
         comments: Richieste
@@ -128,7 +129,7 @@ it:
         language: Lingua delle informazioni
         created_by: Creato da
         updated_by: Aggiornato da
-        in_progress_by: In lavorazione da
+        in_progress_by: In istruttoria da
         rule: Collegamento con i relativi supplementi
         source: Fonte di informazione
         region: Regione
@@ -142,6 +143,7 @@ it:
           reviewed: Accettata da INAPP
           accepted: Accettata
           in_progress: In lavorazione
+          inapp: In lavorazione da INAPP
           accepted_with_advice: Accettata con raccomandazione
       application/translation:
         title: Titolo

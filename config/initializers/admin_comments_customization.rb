@@ -7,20 +7,30 @@ ActiveAdmin::Comments::Views::Comments.class_eval do
     @options = options
     @resource = resource
     if is_integration_request?
-      @comments = active_admin_authorization.scope_collection(ActiveAdmin::Comment.find_for_resource_in_namespace(resource, active_admin_namespace.name).includes(:author).where(status: "integration_request").page(params[:page]))
+      @comments = active_admin_authorization.scope_collection(ActiveAdmin::Comment.find_for_resource_in_namespace(resource, active_admin_namespace.name).includes(:author).where(status: "integration_request"))
+    elsif is_acceptance_request?
+      @comments = active_admin_authorization.scope_collection(ActiveAdmin::Comment.find_for_resource_in_namespace(resource, active_admin_namespace.name).includes(:author).where(status: "accept"))
     else
-      @comments = active_admin_authorization.scope_collection(ActiveAdmin::Comment.find_for_resource_in_namespace(resource, active_admin_namespace.name).includes(:author).where(status: "accept").page(params[:page]))
+      @comments = active_admin_authorization.scope_collection(ActiveAdmin::Comment.find_for_resource_in_namespace(resource, active_admin_namespace.name).includes(:author).where(status: "inapp"))
     end
 
     add_class options[:status]
 
     if options[:show_only_form]
-      if resource.in_progress? && (resource.in_progress_by == current_admin_user || current_admin_user.super_admin?)
+      if resource.reviewed? && (resource.in_progress_by == current_admin_user || current_admin_user.super_admin?) && !is_inapp_request?
+        super(form_title, for: resource)
+        build_comment_form
+      end
+      if resource.inapp? && current_admin_user.level_2?
         super(form_title, for: resource)
         build_comment_form
       end
     else
-      if resource.comments.where(status: 'integration_request').count > 0
+      if is_integration_request? && resource.comments.where(status: 'integration_request').count > 0
+        super(title, for: resource)
+        build_comments
+      end
+      if is_inapp_request? && resource.comments.where(status: 'inapp').count > 0 && (current_admin_user.super_admin? || current_admin_user.level_2? || current_admin_user.level_3?)
         super(title, for: resource)
         build_comments
       end
@@ -35,6 +45,10 @@ ActiveAdmin::Comments::Views::Comments.class_eval do
     options[:status] == "accept" || options[:status] == "accept_form"
   end
 
+  def is_inapp_request?
+    options[:status] == "inapp" || options[:status] == "inapp_form"
+  end
+
   protected
 
   def title
@@ -45,6 +59,8 @@ ActiveAdmin::Comments::Views::Comments.class_eval do
       ""
     elsif is_acceptance_request?
       I18n.t "active_admin.comments.accept_title_content"
+    elsif is_inapp_request?
+      I18n.t "active_admin.comments.inapp_title_content"
     else
       I18n.t "active_admin.comments.title_content", count: @comments.total_count
     end
@@ -57,6 +73,8 @@ ActiveAdmin::Comments::Views::Comments.class_eval do
       I18n.t "active_admin.comments.accept_level_2_title_content"
     elsif is_acceptance_request?
       I18n.t "active_admin.comments.accept_title_content"
+    elsif is_inapp_request?
+      I18n.t "active_admin.comments.inapp_title_content"
     else
       I18n.t "active_admin.comments.title_content", count: @comments.total_count
     end
@@ -71,7 +89,7 @@ ActiveAdmin::Comments::Views::Comments.class_eval do
       # build_empty_message
     end
 
-    text_node paginate @comments
+    # text_node paginate @comments
 
     # if authorized?(ActiveAdmin::Auth::CREATE, ActiveAdmin::Comment) && @show_form
     #   build_comment_form
@@ -120,14 +138,12 @@ ActiveAdmin::Comments::Views::Comments.class_eval do
       f.inputs do
         f.input :resource_type, as: :hidden, input_html: { value: ActiveAdmin::Comment.resource_type(parent.resource) }
         f.input :resource_id, as: :hidden, input_html: { value: parent.resource.id }
-        f.input :status, as: :hidden, input_html: { value: self.parent.options[:status] == "integration_form" ? "integration_request" : "accept" }
-        unless self.parent.is_acceptance_request? && current_admin_user.level_2?
-          f.input :body, label: false, input_html: { size: "80x8" }
-        end
+        f.input :status, as: :hidden, input_html: { value: self.parent.options[:status] == "integration_form" ? "integration_request" : (self.parent.options[:status] == "accept_form" ? "accept" : "inapp") }
+        f.input :body, label: false, input_html: { size: "80x8" }
       end
 
       f.actions do
-        if resource.in_progress?
+        if resource.reviewed?
           if self.parent.is_integration_request? && (current_admin_user.super_admin? || current_admin_user.level_3?)
             f.action :submit, label: I18n.t("active_admin.comments.send_integration_request")
           elsif self.parent.is_acceptance_request? && (current_admin_user.super_admin? || current_admin_user.level_3?)
@@ -139,6 +155,8 @@ ActiveAdmin::Comments::Views::Comments.class_eval do
           elsif self.parent.is_acceptance_request? && (current_admin_user.super_admin? || current_admin_user.level_2?)
             f.action :submit, label: I18n.t("active_admin.comments.send_acceptance_review")
           end
+        elsif resource.inapp?
+          f.action :submit, label: I18n.t("active_admin.comments.send_opinion")
         else
           f.action :submit, label: I18n.t("active_admin.comments.add")
         end

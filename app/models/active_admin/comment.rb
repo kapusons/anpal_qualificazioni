@@ -51,7 +51,7 @@ module ActiveAdmin
       elsif user.level_1?
         filtered = filtered.where(applications: { created_by_id: user.id })
       elsif user.level_2?
-        filtered = filtered.where.not(applications: { status: 'draft' })
+        filtered = filtered.where(applications: { status: 'inapp' })
       elsif user.level_3?
         filtered = filtered.where.not(applications: { status: 'draft' })
       end

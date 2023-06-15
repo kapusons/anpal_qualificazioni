@@ -29,8 +29,8 @@ class Ability
       # end
       cannot :read, Rule
     elsif user.level_2?
-      can [:read], Application, Application.not_in_draft do |aa|
-        Application.completed
+      can [:read], Application, Application.inapp do |aa|
+        aa.inapp?
       end
       can :not_delete, ActiveAdmin::Comment, ActiveAdmin::Comment.for_application_visible_by(user) do |comment|
         user.super_admin? || user.level_3? || user.level_2? || comment.resource.created_by == user

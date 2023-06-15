@@ -75,6 +75,9 @@
   &.in_progress {
     background-color: orange;
   }
+  &.inapp {
+    background-color: orange;
+  }
 }
 
 .status_tag.admin {
@@ -97,6 +100,9 @@
     background-color: darkgreen;
   }
   &.in_progress {
+    background-color: orange;
+  }
+  &.inapp {
     background-color: orange;
   }
 }

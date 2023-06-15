@@ -70,6 +70,7 @@ class Application < ApplicationRecord
     state :completed
     state :in_progress
     state :integration_required
+    state :inapp
     state :accepted_with_advice
     state :reviewed
     state :accepted
@@ -79,17 +80,20 @@ class Application < ApplicationRecord
     event :in_progress do
       transitions from: [:completed, :reviewed], to: :in_progress
     end
-    event :integrate do
-      transitions from: :in_progress, to: :integration_required
-    end
-    event :accept_with_advice do
-      transitions from: :in_progress, to: :accepted_with_advice
+    event :send_to_inapp do
+      transitions from: :in_progress, to: :inapp
     end
     event :review do
-      transitions from: :in_progress, to: :reviewed
+      transitions from: :inapp, to: :reviewed
     end
     event :accept do
-      transitions from: :in_progress, to: :accepted
+      transitions from: :reviewed, to: :accepted
+    end
+    event :integrate do
+      transitions from: :reviewed, to: :integration_required
+    end
+    event :accept_with_advice do
+      transitions from: :reviewed, to: :accepted_with_advice
     end
   end
 
@@ -128,7 +132,7 @@ class Application < ApplicationRecord
     elsif user.level_1?
       filtered = filtered.created_from(user)
     elsif user.level_2?
-      filtered = filtered.where.not(status: 'draft')
+      filtered = filtered.where(status: 'inapp')
     elsif user.level_3?
       filtered = filtered.where.not(status: 'draft')
     end

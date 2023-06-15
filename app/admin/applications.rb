@@ -16,8 +16,18 @@ ActiveAdmin.register Application do
     link_to t('active_admin.applications.integration_request'), integration_request_admin_application_path(resource)
   end
 
-  action_item :in_progress, only: [:show], if: proc { (resource.completed? && (current_admin_user.super_admin? || current_admin_user.level_3? || current_admin_user.level_2?)) || (resource.reviewed? && (current_admin_user.super_admin? || current_admin_user.level_3?)) } do
+  action_item :in_progress, only: [:show], if: proc { (resource.completed? && (current_admin_user.super_admin? || current_admin_user.level_3?))} do
     link_to t('active_admin.applications.take'), in_progress_admin_application_path(resource)
+  end
+
+  action_item :review, only: [:show], if: proc { (resource.in_progress? && (current_admin_user.super_admin? || current_admin_user.level_3?))} do
+    link_to t('active_admin.applications.review'), review_admin_application_path(resource)
+  end
+
+  member_action :review, method: :get do
+    @application = Application.find(params[:id])
+    @application.send_to_inapp!
+    redirect_to admin_application_path(@application), notice: I18n.t('active_admin.applications.sent_to_inapp')
   end
 
   member_action :in_progress, method: :get do
@@ -169,11 +179,11 @@ ActiveAdmin.register Application do
     # column :status
     actions do |a|
       links = ""
-      if a.completed? && (current_admin_user.super_admin? || current_admin_user.level_3? || current_admin_user.level_2?)
+      if a.completed? && (current_admin_user.super_admin? || current_admin_user.level_3?)
         links += link_to t('active_admin.applications.take'), in_progress_admin_application_path(a)
       end
-      if a.reviewed? && (current_admin_user.super_admin? || current_admin_user.level_3?)
-        links += link_to t('active_admin.applications.take'), in_progress_admin_application_path(a)
+      if a.in_progress? && (current_admin_user.super_admin? || current_admin_user.level_3?)
+        links += link_to t('active_admin.applications.review'), review_admin_application_path(a)
       end
       links.html_safe
     end
@@ -246,7 +256,10 @@ ActiveAdmin.register Application do
     end
 
     active_admin_comments status: "integration_request"
-    if ((resource.in_progress? && (resource.in_progress_by == current_admin_user || current_admin_user.super_admin?) ))
+    if (current_admin_user.super_admin? || current_admin_user.level_2? || current_admin_user.level_3?)
+      active_admin_comments status: "inapp"
+    end
+    if ((resource.reviewed? && (resource.in_progress_by == current_admin_user || current_admin_user.super_admin?) ))
       div do
         button t('active_admin.applications.integration_request'), class: "button integration_request"
         button t('active_admin.applications.accept'), class: "button accept"
@@ -255,6 +268,7 @@ ActiveAdmin.register Application do
 
     active_admin_comments status: "integration_form", show_only_form: true
     active_admin_comments status: "accept_form", show_only_form: true
+    active_admin_comments status: "inapp_form", show_only_form: true
 
   end
 

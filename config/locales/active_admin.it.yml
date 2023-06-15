@@ -29,6 +29,8 @@ it:
       integration_request: Richiesta integrazione
       accept: Accetta istanza
       take: Inizia istruttoria
+      review: Invia ad INAPP
+      sent_to_inapp: "L'istanza è stata inviata correttamente ad INAPP."
       confim_ada_selection: "Attenzione: confermando l'operazione alcuni valori potrebbereo essere sostituiti con quelli derivanti da Atlante."
     filters:
       location:
@@ -45,6 +47,7 @@ it:
         save_without_validation: Salva come bozza
     comments:
       integration_request_title_content: Dettaglio richiesta integrazione
+      inapp_title_content: Parere INAPP
       in_integration_request_title_content: Inserisci richiesta integrazione
       accept_title_content: Dettaglio raccomandazione
       accept_level_2_title_content: Conferma accettazione
@@ -54,6 +57,8 @@ it:
       send_acceptance_request_with_advice: Accetta con raccomandazione
       sent_acceptance_request_with_advice: Istanza accettata con successo
       send_acceptance_review: Accetta
+      send_opinion: Invia parere
+      sent_opinion: Parere inviato con successo
       sent_acceptance_review: Istanza accettata con successo
       send_acceptance_request: Accetta senza raccomandazione
       sent_acceptance_request: Istanza accettata con successo

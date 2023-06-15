@@ -65,7 +65,11 @@ ActiveAdmin.after_load do |app|
                   resource.resource.accept!
                 end
               elsif current_admin_user.level_2?
-                if params[:commit] == I18n.t("active_admin.comments.send_integration_request")
+                if params[:commit] == I18n.t("active_admin.comments.send_opinion")
+                  flash[:notice] = I18n.t("active_admin.comments.sent_opinion")
+                  resource.resource.review!
+                  redirect_to(active_admin_root) && return
+                elsif params[:commit] == I18n.t("active_admin.comments.send_integration_request")
                   flash[:notice] = I18n.t("active_admin.comments.sent_integration_request")
                   resource.resource.integrate!
                 elsif params[:commit] == I18n.t("active_admin.comments.send_integration_request")
