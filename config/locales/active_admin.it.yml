@@ -21,6 +21,7 @@ it:
       parents:
         administration: Amministrazione
     applications:
+      sent_learning: "Learning opportunities salvate correttamente."
       sent_to_review: "L'istanza è stata inviata correttamente."
       required_integration: "La richieta di integrazione dell'instanza è stata inviata correttamente."
       in_progress: "L'istanza è stata presa in carico."
@@ -30,6 +31,7 @@ it:
       accept: Accetta istanza
       take: Inizia istruttoria
       review: Invia ad INAPP
+      add_learning_opportunities: Aggiungi learning opportunity
       sent_to_inapp: "L'istanza è stata inviata correttamente ad INAPP."
       confim_ada_selection: "Attenzione: confermando l'operazione alcuni valori potrebbereo essere sostituiti con quelli derivanti da Atlante."
     filters:
@@ -43,6 +45,7 @@ it:
     actions:
       application:
         send: Invia
+        save: Salva
         submit: Salva e procedi
         save_without_validation: Salva come bozza
     comments:

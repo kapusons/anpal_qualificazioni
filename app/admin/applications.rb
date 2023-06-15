@@ -24,6 +24,10 @@ ActiveAdmin.register Application do
     link_to t('active_admin.applications.review'), review_admin_application_path(resource)
   end
 
+  action_item :page3, only: [:show], if: proc { (resource.accepted? || resource.accepted_with_advice?) && (current_admin_user.super_admin? || current_admin_user.level_1?)} do
+    link_to t('active_admin.applications.add_learning_opportunities'), page3_admin_application_path(resource)
+  end
+
   member_action :review, method: :get do
     @application = Application.find(params[:id])
     @application.send_to_inapp!
@@ -143,7 +147,7 @@ ActiveAdmin.register Application do
     # @application.store_version("step3")
     @application.assign_attributes(permitted_params.dig(:application) || {})
     if @application.save
-      redirect_to admin_applications_path, notice: I18n.t('active_admin.applications.sent_to_review')
+      redirect_to admin_applications_path, notice: I18n.t('active_admin.applications.sent_learning')
     else
       @application.learning_opportunities.blank? ? @application.learning_opportunities.build : []
       render template: 'admin/page3', locals: { url: save_page3_admin_application_path(@application) }, layout: "active_admin"
@@ -184,6 +188,9 @@ ActiveAdmin.register Application do
       end
       if a.in_progress? && (current_admin_user.super_admin? || current_admin_user.level_3?)
         links += link_to t('active_admin.applications.review'), review_admin_application_path(a)
+      end
+      if (a.accepted? || a.accepted_with_advice?)&& (current_admin_user.super_admin? || current_admin_user.level_1?)
+        links += link_to t('active_admin.applications.add_learning_opportunities'), page3_admin_application_path(a)
       end
       links.html_safe
     end
