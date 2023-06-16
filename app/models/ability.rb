@@ -27,6 +27,7 @@ class Ability
       can :download, ActiveAdmin::Comment, ActiveAdmin::Comment.for_application_visible_by(user) do |comment|
         comment.status == "integration_request" && comment.resource.created_by == user
       end
+      cannot :review
       cannot :read, Rule
     elsif user.level_2?
       can [:read], Application, Application.inapp do |aa|
@@ -38,6 +39,7 @@ class Ability
       can :download, ActiveAdmin::Comment, ActiveAdmin::Comment.for_application_visible_by(user) do |comment|
         comment.status == "integration_request" || (comment.status == "inapp" && comment.resource.inapp?)
       end
+      cannot :review, Application
       # non funziona
       # cannot :create, ActiveAdmin::Comment, ActiveAdmin::Comment.for_application_visible_by(user) do |comment|
       #   comment.resource.in_progress?
@@ -62,6 +64,9 @@ class Ability
       # end
       can :versions, Application, Application.not_in_draft do |aa|
         Application.not_in_draft
+      end
+      can :review, Application, Application.not_in_draft do |aa|
+        aa.in_progress_by == user && aa.in_progress?
       end
       can :download, ActiveAdmin::Comment, ActiveAdmin::Comment.for_application_visible_by(user) do |comment|
         comment.status == "integration_request" || comment.status == "inapp"

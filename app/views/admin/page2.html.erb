@@ -30,7 +30,7 @@
       f.input :cp_istat_ids, as: :select, collection: CpIstat.all.sort_by { |v| Gem::Version.new(v.code) }.map { |a| [a.display_name, a.id] }, multiple: true
     end
     f.actions do
-      f.action :submit, label: I18n.t("active_admin.actions.application.submit")
+      f.action :submit, label: I18n.t("active_admin.actions.application.send")
       cancel_link
       # f.action :submit, label: I18n.t("active_admin.actions.application.save_without_validation")
     end

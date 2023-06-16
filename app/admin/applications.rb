@@ -16,22 +16,27 @@ ActiveAdmin.register Application do
     link_to t('active_admin.applications.integration_request'), integration_request_admin_application_path(resource)
   end
 
-  action_item :in_progress, only: [:show], if: proc { (resource.completed? && (current_admin_user.super_admin? || current_admin_user.level_3?))} do
+  action_item :in_progress, only: [:show], if: proc { (resource.completed? && (current_admin_user.super_admin? || current_admin_user.level_3?)) } do
     link_to t('active_admin.applications.take'), in_progress_admin_application_path(resource)
   end
 
-  action_item :review, only: [:show], if: proc { (resource.in_progress? && (current_admin_user.super_admin? || current_admin_user.level_3?))} do
+  action_item :review, only: [:show], if: proc { authorized?(:review, resource) } do
     link_to t('active_admin.applications.review'), review_admin_application_path(resource)
   end
 
-  action_item :page3, only: [:show], if: proc { (resource.accepted? || resource.accepted_with_advice?) && (current_admin_user.super_admin? || current_admin_user.level_1?)} do
+  action_item :page3, only: [:show], if: proc { (resource.accepted? || resource.accepted_with_advice?) && (current_admin_user.super_admin? || current_admin_user.level_1?) } do
     link_to t('active_admin.applications.add_learning_opportunities'), page3_admin_application_path(resource)
   end
 
   member_action :review, method: :get do
     @application = Application.find(params[:id])
-    @application.send_to_inapp!
-    redirect_to admin_application_path(@application), notice: I18n.t('active_admin.applications.sent_to_inapp')
+    if authorized?(:review, @application)
+      @application.send_to_inapp!
+      redirect_to admin_application_path(@application), notice: I18n.t('active_admin.applications.sent_to_inapp')
+    else
+      flash[:notice] = I18n.t("active_admin.access_denied.message")
+      redirect_back(fallback_location: active_admin_root) && return
+    end
   end
 
   member_action :in_progress, method: :get do
@@ -66,105 +71,145 @@ ActiveAdmin.register Application do
   collection_action :create, method: :post do
     @application = build_resource
     @application.step = 1
-    # Per salvarmi i precedente valore
-    @application.store_version("step1")
-    @application.skip_validation = params[:commit] == I18n.t("active_admin.actions.application.save_without_validation")
-    if create_resource(@application)
-      if @application.skip_validation
-        render 'admin/page1', locals: { adas: adas, url: save_page1_admin_application_path(@application) }, layout: "active_admin"
+    if authorized?(ActiveAdmin::Auth::CREATE, @application)
+      # Per salvarmi i precedente valore
+      @application.store_version("step1")
+      @application.skip_validation = params[:commit] == I18n.t("active_admin.actions.application.save_without_validation")
+      if create_resource(@application)
+        if @application.skip_validation
+          render 'admin/page1', locals: { adas: adas, url: save_page1_admin_application_path(@application) }, layout: "active_admin"
+        else
+          render template: 'admin/page2', locals: { url: save_page2_admin_application_path(@application) }, layout: "active_admin"
+        end
       else
-        render template: 'admin/page2', locals: { url: save_page2_admin_application_path(@application) }, layout: "active_admin"
+        render template: 'admin/page1', locals: { adas: adas, url: admin_applications_path }, layout: "active_admin"
       end
     else
-      render template: 'admin/page1', locals: { adas: adas, url: admin_applications_path }, layout: "active_admin"
+      flash[:notice] = I18n.t("active_admin.access_denied.message")
+      redirect_back(fallback_location: active_admin_root) && return
     end
   end
 
   member_action :page1, method: :get do
     @application = Application.find_or_initialize_by(id: params[:id])
-    url = @application.persisted? ? save_page1_admin_application_path(@application) : admin_applications_path
-    @application.step = 1
-    render template: 'admin/page1', locals: { adas: adas, url: url }, layout: "active_admin"
+    if authorized?(ActiveAdmin::Auth::UPDATE, @application)
+      url = @application.persisted? ? save_page1_admin_application_path(@application) : admin_applications_path
+      @application.step = 1
+      render template: 'admin/page1', locals: { adas: adas, url: url }, layout: "active_admin"
+    else
+      flash[:notice] = I18n.t("active_admin.access_denied.message")
+      redirect_back(fallback_location: active_admin_root) && return
+    end
   end
 
   member_action :save_page1, method: [:put, :patch] do
     @application = Application.find(params[:id])
     @application.step = 1
-    # Per salvarmi i precedente valore
-    @application.store_version("step1")
-    @application.assign_attributes(permitted_params.dig(:application) || {})
-    @application.skip_validation = params[:commit] == I18n.t("active_admin.actions.application.save_without_validation")
-    if @application.save
-      if @application.skip_validation
-        render template: 'admin/page1', locals: { adas: adas, url: save_page1_admin_application_path(@application) }, layout: "active_admin"
+    if authorized?(ActiveAdmin::Auth::UPDATE, @application)
+      # Per salvarmi i precedente valore
+      @application.store_version("step1")
+      @application.assign_attributes(permitted_params.dig(:application) || {})
+      @application.skip_validation = params[:commit] == I18n.t("active_admin.actions.application.save_without_validation")
+      if @application.save
+        if @application.skip_validation
+          render template: 'admin/page1', locals: { adas: adas, url: save_page1_admin_application_path(@application) }, layout: "active_admin"
+        else
+          render template: 'admin/page2', locals: { url: save_page2_admin_application_path(@application) }, layout: "active_admin"
+        end
       else
-        render template: 'admin/page2', locals: { url: save_page2_admin_application_path(@application) }, layout: "active_admin"
+        render template: 'admin/page1', locals: { adas: adas, url: save_page1_admin_application_path(@application) }, layout: "active_admin"
       end
     else
-      render template: 'admin/page1', locals: { adas: adas, url: save_page1_admin_application_path(@application) }, layout: "active_admin"
+      flash[:notice] = I18n.t("active_admin.access_denied.message")
+      redirect_back(fallback_location: active_admin_root) && return
     end
   end
 
   member_action :page2, method: :get do
     @application = Application.find(params[:id])
-    @application.step = 2
-    render template: 'admin/page2', locals: { adas: adas, url: save_page2_admin_application_path(@application) }, layout: "active_admin"
+    if authorized?(ActiveAdmin::Auth::UPDATE, @application)
+      @application.step = 2
+      render template: 'admin/page2', locals: { adas: adas, url: save_page2_admin_application_path(@application) }, layout: "active_admin"
+    else
+      flash[:notice] = I18n.t("active_admin.access_denied.message")
+      redirect_back(fallback_location: active_admin_root) && return
+    end
   end
 
   member_action :save_page2, method: [:put, :patch] do
     @application = Application.find(params[:id])
-    @application.step = 2
-    # Per salvarmi i precedente valore
-    @application.store_version("step2")
-    @application.assign_attributes(permitted_params.dig(:application) || {})
-    # @application.skip_validation = params[:commit] == I18n.t("active_admin.actions.application.save_without_validation")
-    if @application.save
-      # if @application.skip_validation
-      #   render template: 'admin/page2', locals: { url: save_page2_admin_application_path(@application) }, layout: "active_admin"
-      # else
-      #   @application.learning_opportunities.blank? ? @application.learning_opportunities.build : []
-      #   render template: 'admin/page3', locals: { url: save_page3_admin_application_path(@application) }, layout: "active_admin"
-      # end
-      @application.complete!
-      redirect_to admin_applications_path, notice: I18n.t('active_admin.applications.sent_to_review')
+    if authorized?(ActiveAdmin::Auth::UPDATE, @application)
+      @application.step = 2
+      # Per salvarmi i precedente valore
+      @application.store_version("step2")
+      @application.assign_attributes(permitted_params.dig(:application) || {})
+      # @application.skip_validation = params[:commit] == I18n.t("active_admin.actions.application.save_without_validation")
+      if @application.save
+        # if @application.skip_validation
+        #   render template: 'admin/page2', locals: { url: save_page2_admin_application_path(@application) }, layout: "active_admin"
+        # else
+        #   @application.learning_opportunities.blank? ? @application.learning_opportunities.build : []
+        #   render template: 'admin/page3', locals: { url: save_page3_admin_application_path(@application) }, layout: "active_admin"
+        # end
+        @application.complete!
+        redirect_to admin_applications_path, notice: I18n.t('active_admin.applications.sent_to_review')
 
+      else
+        render template: 'admin/page2', locals: { url: save_page2_admin_application_path(@application) }, layout: "active_admin"
+      end
     else
-      render template: 'admin/page2', locals: { url: save_page2_admin_application_path(@application) }, layout: "active_admin"
+      flash[:notice] = I18n.t("active_admin.access_denied.message")
+      redirect_back(fallback_location: active_admin_root) && return
     end
   end
 
   member_action :page3, method: :get do
     @application = Application.find(params[:id])
-    @application.learning_opportunities.blank? ? @application.learning_opportunities.build : []
-    @application.step = 3
-    render template: 'admin/page3', locals: { adas: adas, url: save_page3_admin_application_path(@application) }, layout: "active_admin"
+    if authorized?(ActiveAdmin::Auth::UPDATE, @application)
+      @application.learning_opportunities.blank? ? @application.learning_opportunities.build : []
+      @application.step = 3
+      render template: 'admin/page3', locals: { adas: adas, url: save_page3_admin_application_path(@application) }, layout: "active_admin"
+    else
+      flash[:notice] = I18n.t("active_admin.access_denied.message")
+      redirect_back(fallback_location: active_admin_root) && return
+    end
   end
 
   member_action :save_page3, method: [:put, :patch] do
     @application = Application.find(params[:id])
-    @application.step = 3
-    # Per salvarmi i precedente valore
-    # @application.store_version("step3")
-    @application.assign_attributes(permitted_params.dig(:application) || {})
-    if @application.save
-      redirect_to admin_applications_path, notice: I18n.t('active_admin.applications.sent_learning')
+    if authorized?(ActiveAdmin::Auth::UPDATE, @application)
+      @application.step = 3
+      # Per salvarmi i precedente valore
+      # @application.store_version("step3")
+      @application.assign_attributes(permitted_params.dig(:application) || {})
+      if @application.save
+        redirect_to admin_applications_path, notice: I18n.t('active_admin.applications.sent_learning')
+      else
+        @application.learning_opportunities.blank? ? @application.learning_opportunities.build : []
+        render template: 'admin/page3', locals: { url: save_page3_admin_application_path(@application) }, layout: "active_admin"
+      end
     else
-      @application.learning_opportunities.blank? ? @application.learning_opportunities.build : []
-      render template: 'admin/page3', locals: { url: save_page3_admin_application_path(@application) }, layout: "active_admin"
+      flash[:notice] = I18n.t("active_admin.access_denied.message")
+      redirect_back(fallback_location: active_admin_root) && return
     end
   end
 
   member_action :update1, method: [:put, :patch] do
     @application = Application.find(params[:id])
-    @application.step = 1
-    # Per salvarmi i precedente valore
-    @application.store_version("step1")
-    @application.assign_attributes(permitted_params.dig(:application) || {})
-    @application.skip_validation = params[:commit] == I18n.t("active_admin.actions.application.save_without_validation")
-    if @application.save
-      render template: 'admin/page2', locals: { url: save_page2_admin_application_path(@application) }, layout: "active_admin"
+    if authorized?(ActiveAdmin::Auth::UPDATE, @application)
+      @application.step = 1
+      # Per salvarmi i precedente valore
+      @application.store_version("step1")
+      @application.assign_attributes(permitted_params.dig(:application) || {})
+      @application.skip_validation = params[:commit] == I18n.t("active_admin.actions.application.save_without_validation")
+      if @application.save
+        render template: 'admin/page2', locals: { url: save_page2_admin_application_path(@application) }, layout: "active_admin"
+      else
+        render 'admin/page1', locals: { adas: adas, url: save_page1_admin_application_path(@application) }, layout: "active_admin"
+      end
     else
-      render 'admin/page1', locals: { adas: adas, url: save_page1_admin_application_path(@application) }, layout: "active_admin"
+      flash[:notice] = I18n.t("active_admin.access_denied.message")
+      redirect_back(fallback_location: active_admin_root) && return
     end
   end
 
@@ -186,10 +231,10 @@ ActiveAdmin.register Application do
       if a.completed? && (current_admin_user.super_admin? || current_admin_user.level_3?)
         links += link_to t('active_admin.applications.take'), in_progress_admin_application_path(a)
       end
-      if a.in_progress? && (current_admin_user.super_admin? || current_admin_user.level_3?)
+      if authorized?(:review, a)
         links += link_to t('active_admin.applications.review'), review_admin_application_path(a)
       end
-      if (a.accepted? || a.accepted_with_advice?)&& (current_admin_user.super_admin? || current_admin_user.level_1?)
+      if (a.accepted? || a.accepted_with_advice?) && (current_admin_user.super_admin? || current_admin_user.level_1?)
         links += link_to t('active_admin.applications.add_learning_opportunities'), page3_admin_application_path(a)
       end
       links.html_safe
@@ -246,12 +291,14 @@ ActiveAdmin.register Application do
       row :admission
       row :atecos
       row :cp_istats
-      row :learning_opportunities do
-        table_for application.learning_opportunities do
-          column :location
-          column :duration
-          column :institution
-          column :manner
+      if application.learning_opportunities.present?
+        row :learning_opportunities do
+          table_for application.learning_opportunities do
+            column :location
+            column :duration
+            column :institution
+            column :manner
+          end
         end
       end
 
@@ -266,7 +313,7 @@ ActiveAdmin.register Application do
     if (current_admin_user.super_admin? || current_admin_user.level_2? || current_admin_user.level_3?)
       active_admin_comments status: "inapp"
     end
-    if ((resource.reviewed? && (resource.in_progress_by == current_admin_user || current_admin_user.super_admin?) ))
+    if ((resource.reviewed? && (resource.in_progress_by == current_admin_user || current_admin_user.super_admin?)))
       div do
         button t('active_admin.applications.integration_request'), class: "button integration_request"
         button t('active_admin.applications.accept'), class: "button accept"
