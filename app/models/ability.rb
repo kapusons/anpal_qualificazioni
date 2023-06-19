@@ -27,7 +27,7 @@ class Ability
       can :download, ActiveAdmin::Comment, ActiveAdmin::Comment.for_application_visible_by(user) do |comment|
         comment.status == "integration_request" && comment.resource.created_by == user
       end
-      cannot :review
+      cannot :review, Application
       cannot :read, Rule
     elsif user.level_2?
       can [:read], Application, Application.inapp do |aa|
