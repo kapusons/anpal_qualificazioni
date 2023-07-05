@@ -63,9 +63,19 @@ ActiveAdmin.register Application do
   end
 
   collection_action :atlante, method: :get do
-    json = get_atlante_request("https://atlantetest.inapp.org/api/v2/adaCodice?codiceAda=#{params[:ada]}")
-    response = json["code"] == 200 ? json["result"] : []
-    render json: response
+    r = {}
+    begin
+      filepath = Rails.root.join("lib", './sample-data.json')
+      if File.exist?(filepath)
+        file = File.read(filepath)
+        json = JSON.parse(file)
+        r = json.select { |a| a["uuid"] == params[:ada].to_i }
+      end
+    rescue
+      r = {}
+    end
+
+    render json: r[0]
   end
 
   collection_action :create, method: :post do
@@ -343,34 +353,16 @@ ActiveAdmin.register Application do
     # end
     def adas
       @adas ||= begin
-                  json = get_atlante_request('https://atlantetest.inapp.org/api/v2/ada')
-                  json["code"] == 200 ? json["result"].map { |a| [a["titolo"], a["codice"]] } : []
+                  filepath = Rails.root.join("lib", './sample-data-ridotto.json')
+                  if File.exist?(filepath)
+                    file = File.read(filepath)
+                    json = JSON.parse(file)
+                    json.sort_by { |a| a["titolo"].strip }.map { |a| ["#{a["titolo"]} (Codice: #{a["codice"]})", a["uuid"]] }
+                  end
+                rescue
+                  []
                 end
 
-    end
-
-    def get_atlante_request(url)
-      begin
-        uri = URI.parse(url)
-        request = Net::HTTP::Get.new(uri)
-        request["Accept"] = "*/*"
-
-        request.delete("user-agent")
-
-        req_options = {
-          use_ssl: uri.scheme == "https",
-        }
-
-        response = Net::HTTP.start(uri.hostname, uri.port, req_options) do |http|
-          http.request(request)
-        end
-
-        content = response.body.force_encoding("UTF-8")
-        content.gsub!("\xEF\xBB\xBF".force_encoding("UTF-8"), '')
-        JSON.parse(content)
-      rescue
-        {}
-      end
 
     end
 
