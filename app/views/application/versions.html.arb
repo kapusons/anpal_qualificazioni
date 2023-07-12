@@ -8,7 +8,6 @@ panel(I18n.t("activerecord.attributes.paper_trail/version.events.details")) do
       I18n.t("activerecord.attributes.paper_trail/version.events.update")
     end
     t = ""
-    Rails.logger.info self.inspect
 
     (self.arbre_context.assigns.dig(:application).version_fields + [:isceds, :atecos, :cp_istats]).each do |field|
       row field do |a|
@@ -35,16 +34,162 @@ panel(I18n.t("activerecord.attributes.paper_trail/version.events.details")) do
     end
 
     translate_attributes_table_with_label_for [versions.first] do
-      (Application.translated_attribute_names - [:description]).each do |field|
+      (Application.translated_attribute_names).each do |field|
         row field do |current_instance, item, locale|
-          if current_instance.meta_objects[field.to_s][locale] != item.translation_for(locale).send(field)
-            "<s>#{current_instance.meta_objects[field.to_s][locale]}</s></br>#{item.translation_for(locale).send(field)}".html_safe
+          tt = current_instance.meta_objects[field.to_s]
+          if tt.try(:[], locale) != item.translation_for(locale).send(field)
+            "<s>#{tt.try(:[], locale).present? ? tt[locale] : 'Nessun valore'}</s></br>#{item.translation_for(locale).send(field)}".html_safe
           else
             "="
           end
         end
       end
+    end
 
+    def group_for_2(ids1,ids2)
+      r = []
+      ids1.zip(ids2).each do|id1, id2|
+        r << [id1, id2]
+      end
+      r
+      # tmp = ids.compact.group_by{|x| x}.values.sort_by{ |x| -x.length }
+      # r = []
+      # tmp.each do |array|
+      #   puts array.inspect
+      #   puts (array.length > 2).inspect
+      #   puts (array.length == 2).inspect
+      #   puts (array.length > 2).inspect
+      #   r << array && next if r.empty?
+      #   r << [array[0], array[1]] && next if array.length > 2
+      #   r << array && next if array.length == 2
+      #   if array.length == 1 && r.last.length == 2
+      #     r << array
+      #   else
+      #     r.last << array[0]
+      #   end
+      # end
+      r
+    end
+
+    attributes_table_for application.competences do
+      div class: "panel" do
+        h3 "Compentenze"
+        a = versions.first
+        item = Application.find(a.item_id)
+        desca = a.meta_objects["desc"]
+        if desca.present?
+          ids = a.meta_objects["desc"].map{ |b| b["id"] }
+          r = group_for_2(self.arbre_context.assigns.dig(:application).competence_ids, ids)
+          r.each do |id1, id2|
+            competence = item.competences.find_by(id: id1)
+            el = desca.select{ |h| h['id'] == id2 }.first
+            div class: "panel_contents" do
+              div class: "attributes_table" do
+                table do
+                  tr do
+                    th(colspan: 3 ) do
+                      old_val = "#{I18n.t("activerecord.attributes.competence.competence")}: #{el.try(:[], "competence")}"
+                      new_val = "#{I18n.t("activerecord.attributes.competence.competence")}: #{competence.try(:competence)}"
+                      old_val != new_val ?  "<s>#{old_val}</s></br>#{new_val}".html_safe : "="
+                    end
+                  end
+                  tr do
+                    th I18n.t("activerecord.models.knowledge", count: competence.try(:knowledges).try(:count))
+                    th I18n.t("activerecord.models.ability", count: competence.try(:abilities).try(:count))
+                    th I18n.t("activerecord.models.responsibility", count: competence.try(:responsibilities).try(:count))
+                  end
+                  tbody do
+                    knowledge_ids = group_for_2(competence.try(:knowledge_ids), ((el["knowledges"].map{ |a| a["id"] } rescue [])).map(&:to_i).compact)
+                    ability_ids = group_for_2(competence.ability_ids, ((el["abilities"].map{ |a| a["id"] } rescue [])).map(&:to_i).compact)
+                    responsibility_ids = group_for_2(competence.responsibility_ids, ((el["responsibilities"].map{ |a| a["id"] } rescue [])).map(&:to_i).compact)
+                    knowledge_ids.zip(ability_ids, responsibility_ids) do |(knowledge_id1, knowledge_id2), (ability_id1, ability_id2), (responsibility_id1, responsibility_id2)|
+                      tr do
+                        td(width: '33%') do |kn|
+                          knowledge = competence.knowledges.find_by(id: knowledge_id1)
+                          el2 = el["knowledges"].select{ |h| h['id'] == knowledge_id2 }.try(:first) rescue {}
+                          old_val = el2.try(:[], "knowledge")
+                          new_val = knowledge.try(:knowledge)
+                          old_val != new_val ? "<s>#{old_val}</s></br>#{new_val}".html_safe : "="
+                        end
+                        td(width: '33%') do |ab|
+                          ability = competence.abilities.find_by(id: ability_id1)
+                          el2 = el["abilities"].select{ |h| h['id'] == ability_id2 }.try(:first) rescue {}
+                          old_val = el2.try(:[], "ability")
+                          new_val = ability.try(:ability)
+                          old_val != new_val ? "<s>#{old_val}</s></br>#{new_val}".html_safe : "="
+                        end
+                        td(width: '33%') do |re|
+                          responsibility = competence.responsibilities.find_by(id: responsibility_id1)
+                          el2 = el["responsibilities"].select{ |h| h['id'] == responsibility_id2 }.try(:first) rescue {}
+                          old_val = el2.try(:[], "responsibility")
+                          new_val = responsibility.try(:responsibility)
+                          old_val != new_val ? "<s>#{old_val}</s></br>#{new_val}".html_safe : "="
+                        end
+                      end
+
+
+                    end
+                  end
+                end
+              end
+            end
+          end
+          # (self.arbre_context.assigns.dig(:application).competence_ids + ids).uniq.compact.each do |id|
+          #   el = desca.select{ |h| h['id'] == id }.first
+          #   competence = item.competences.find_by(id: id)
+          #   div class: "panel_contents" do
+          #     div class: "attributes_table" do
+          #       table do
+          #         tr do
+          #           th(colspan: 3 ) do
+          #             old_val = "#{I18n.t("activerecord.attributes.competence.competence")}: #{el.try(:[], "competence")}"
+          #             new_val = "#{I18n.t("activerecord.attributes.competence.competence")}: #{competence.try(:competence)}"
+          #             old_val != new_val ?  "<s>#{old_val}</s></br>#{new_val}".html_safe : "="
+          #           end
+          #         end
+          #         tr do
+          #           th I18n.t("activerecord.models.knowledge", count: competence.knowledges.count)
+          #           th I18n.t("activerecord.models.ability", count: competence.abilities.count)
+          #           th I18n.t("activerecord.models.responsibility", count: competence.responsibilities.count)
+          #         end
+          #         tbody do
+          #           knowledge_ids = (competence.knowledge_ids + el["knowledges"].map{ |a| a["id"] }).map(&:to_i).compact.uniq
+          #           ability_ids = (competence.ability_ids + el["abilities"].map{ |a| a["id"] }).map(&:to_i).compact.uniq
+          #           responsibility_ids = (competence.responsibility_ids + el["responsibilities"].map{ |a| a["id"] }).map(&:to_i).compact.uniq
+          #           knowledge_ids.zip(ability_ids, responsibility_ids) do |knowledge_id, ability_id, responsibility_id|
+          #             tr do
+          #               td(width: '33%') do |kn|
+          #                 el2 = el["knowledges"].select{ |h| h['id'] == knowledge_id }.try(:first) rescue {}
+          #                 knowledge = competence.knowledges.find_by(id: knowledge_id)
+          #                 old_val = el2.try(:[], "knowledge")
+          #                 new_val = knowledge.try(:knowledge)
+          #                 old_val != new_val ? "<s>#{old_val}</s></br>#{new_val}".html_safe : "="
+          #               end
+          #               td(width: '33%') do |ab|
+          #                 el2 = el["abilities"].select{ |h| h['id'] == ability_id }.try(:first) rescue {}
+          #                 ability = competence.abilities.find_by(id: ability_id)
+          #                 old_val = el2.try(:[], "ability")
+          #                 new_val = ability.try(:ability)
+          #                 old_val != new_val ? "<s>#{old_val}</s></br>#{new_val}".html_safe : "="
+          #               end
+          #               td(width: '33%') do |re|
+          #                 el2 = el["responsibilities"].select{ |h| h['id'] == responsibility_id }.try(:first) rescue {}
+          #                 responsibility = competence.responsibilities.find_by(id: responsibility_id)
+          #                 old_val = el2.try(:[], "responsibility")
+          #                 new_val = responsibility.try(:responsibility)
+          #                 old_val != new_val ? "<s>#{old_val}</s></br>#{new_val}".html_safe : "="
+          #               end
+          #             end
+          #
+          #
+          #           end
+          #         end
+          #       end
+          #     end
+          #   end
+          # end
+        end
+      end
     end
 
   end

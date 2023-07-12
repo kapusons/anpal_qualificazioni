@@ -56,3 +56,6 @@ yarn-debug.log*
 
 .DS_Store
 ~*
+
+/lib/sample-data-ridotto.json
+/lib/sample-data.json

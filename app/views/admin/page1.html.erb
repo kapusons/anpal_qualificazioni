@@ -6,24 +6,42 @@
       f.input :atlante_code, as: :hidden
       # f.input :atlante_region, as: :hidden
       f.input :guarantee_process, as: :hidden
-      f.input :atlante, as: :select, collection: adas, input_html: { class: "atlante-adas", "data-url": atlante_admin_applications_path, "data-message": I18n.t("active_admin.applications.confim_ada_selection") }
+      f.input :atlante, as: :select, desc: true, collection: adas, input_html: { class: "atlante-adas", "data-url": atlante_admin_applications_path, "data-message": I18n.t("active_admin.applications.confim_ada_selection") }
       f.translate_inputs do |t|
-        t.input :title, required: true
-        t.input :url, required: true
+        t.input :title, required: true, desc: true
+        t.input :url, desc: true
       end
     end
-    f.inputs class: "inputs columns" do
-      f.input :isced_ids, as: :select, collection: Isced.all.map { |a| [a.name, a.id] }, multiple: true, required: true
-      f.input :region, as: :select, collection: Region.all.map { |a| [a.name, a.id] }, required: true
-    end
-    f.inputs class: "inputs columns" do
-      f.input :credit, input_html: { type: 'number' }
-      f.input :nqf_level, as: :select, collection: NqfLevel.all.map { |a| [a.name, a.id] }, required: true
-    end
-    f.inputs class: "inputs columns" do
-      f.input :nqf_level_in, as: :select, collection: NqfLevelIn.all.map { |a| [a.name, a.id] }, required: true
-      f.input :nqf_level_out, as: :select, collection: NqfLevelOut.all.map { |a| [a.name, a.id] }, required: true
+    f.inputs do
+      f.has_many :competences, new_record: I18n.t('activerecord.attributes.application.add_competence'), remove_record: I18n.t('activerecord.attributes.application.remove_competence'), allow_destroy: true do |b|
+        b.template.content_tag :div, class: "#{b.object.marked_for_destruction? ? "hide" : ""}" do
+          b.input :competence, required: true, desc: false
+          b.input :atlante_competence, as: :hidden
+          b.input :atlante_code_competence, as: :hidden
 
+          b.has_many :knowledges, new_record: I18n.t('activerecord.attributes.application.add_knowledge'), remove_record: I18n.t('activerecord.attributes.application.remove_knowledge'), allow_destroy: true do |d|
+            d.inputs class: "inputs" do
+              d.input :knowledge, required: true, desc: false
+              d.input :atlante_knowledge, as: :hidden
+              d.input :atlante_code_knowledge, as: :hidden
+            end
+          end
+          b.has_many :abilities, new_record: I18n.t('activerecord.attributes.application.add_ability'), remove_record: I18n.t('activerecord.attributes.application.remove_ability'), allow_destroy: true do |d|
+            d.inputs class: "inputs" do
+              d.input :ability, required: true, desc: false
+              d.input :atlante_ability, as: :hidden
+              d.input :atlante_code_ability, as: :hidden
+            end
+          end
+          b.has_many :responsibilities, new_record: I18n.t('activerecord.attributes.application.add_responsibility'), remove_record: I18n.t('activerecord.attributes.application.remove_responsibility'), allow_destroy: true do |d|
+            d.inputs class: "inputs" do
+              d.input :responsibility, desc: false
+              d.input :atlante_responsibility, as: :hidden
+              d.input :atlante_code_responsibility, as: :hidden
+            end
+          end
+        end
+      end
     end
     f.actions class: "inputs columns" do
       f.action :submit, label: I18n.t("active_admin.actions.application.submit")

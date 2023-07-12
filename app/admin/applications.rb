@@ -3,10 +3,12 @@ ActiveAdmin.register Application do
   # CUSTOM_ACTIONS = [ :page1, :page2, :save_page1, :save_page2]
   permit_params :id, :atlante, :atlante_title, :expiration_date, :region_id, :eqf_id, :certifying_agency_id, :guarantee_entity_id,
                 :atlante_code, :atlante_region,
-                :credit, :guarantee_process, :nqf_level_id, :nqf_level_in_id, :nqf_level_out_id, :language_id, :rule_id, :source_id,
-                :admission_id, ateco_ids: [], cp_istat_ids: [], isced_ids: [], translations_attributes: [:id, :locale,
-                                                                                                         :title, :description, :url], learning_opportunities_attributes: [:id, :_destroy, :application_id,
-                                                                                                                                                                          :location, :duration, :manner, :institution]
+                :credit, :guarantee_process, :nqf_level_id, :nqf_level_in_id, :nqf_level_out_id, :language_id, :rule, :source_id,
+                :admission_id, ateco_ids: [], cp_istat_ids: [], isced_ids: [], competences_attributes: [:id, :_destroy, :competence, :atlante_competence, :atlante_code_competence,
+                                                                                                        knowledges_attributes: [:id, :_destroy, :knowledge, :atlante_knowledge, :atlante_code_knowledge],
+                                                                                                        abilities_attributes: [:id, :_destroy, :ability, :atlante_ability, :atlante_code_ability],
+                                                                                                        responsibilities_attributes: [:id, :_destroy, :responsibility, :atlante_responsibility, :atlante_code_responsibility],],
+                translations_attributes: [:id, :locale, :title, :url], learning_opportunities_attributes: [:id, :_destroy, :application_id, :location, :duration, :manner, :institution]
   actions :all, except: [:create, :update]
 
   filter :translations_title_contains, label: I18n.t("active_admin.filters.application.translations_title_contains")
@@ -81,9 +83,13 @@ ActiveAdmin.register Application do
   collection_action :create, method: :post do
     @application = build_resource
     @application.step = 1
+    # Per salvarmi i precedente valore
+    @application.store_version("step1")
+    @application = build_desc(@application, "step1")
+    if params["build_nested"] == "true"
+      render('admin/page1', locals: { adas: adas, url: admin_applications_path }, layout: "active_admin") && return
+    end
     if authorized?(ActiveAdmin::Auth::CREATE, @application)
-      # Per salvarmi i precedente valore
-      @application.store_version("step1")
       @application.skip_validation = params[:commit] == I18n.t("active_admin.actions.application.save_without_validation")
       if create_resource(@application)
         if @application.skip_validation
@@ -115,9 +121,14 @@ ActiveAdmin.register Application do
   member_action :save_page1, method: [:put, :patch] do
     @application = Application.find(params[:id])
     @application.step = 1
+    # Per salvarmi i precedente valore
+    @application.store_version("step1")
+    @application = build_desc(@application, "step1")
+    if params["build_nested"] == "true"
+      url = @application.persisted? ? save_page1_admin_application_path(@application) : admin_applications_path
+      render('admin/page1', locals: { adas: adas, url: url }, layout: "active_admin") && return
+    end
     if authorized?(ActiveAdmin::Auth::UPDATE, @application)
-      # Per salvarmi i precedente valore
-      @application.store_version("step1")
       @application.assign_attributes(permitted_params.dig(:application) || {})
       @application.skip_validation = params[:commit] == I18n.t("active_admin.actions.application.save_without_validation")
       if @application.save
@@ -206,14 +217,22 @@ ActiveAdmin.register Application do
 
   member_action :update1, method: [:put, :patch] do
     @application = Application.find(params[:id])
+    @application.step = 1
+    # Per salvarmi i precedente valore
+    @application.store_version("step1")
+    @application = build_desc(@application, "step1")
+    if params["build_nested"] == "true"
+      render('admin/page1', locals: { adas: adas, url: save_page1_admin_application_path(@application) }, layout: "active_admin") && return
+    end
     if authorized?(ActiveAdmin::Auth::UPDATE, @application)
-      @application.step = 1
-      # Per salvarmi i precedente valore
-      @application.store_version("step1")
       @application.assign_attributes(permitted_params.dig(:application) || {})
       @application.skip_validation = params[:commit] == I18n.t("active_admin.actions.application.save_without_validation")
       if @application.save
-        render template: 'admin/page2', locals: { url: save_page2_admin_application_path(@application) }, layout: "active_admin"
+        if @application.skip_validation
+          render 'admin/page1', locals: { adas: adas, url: save_page1_admin_application_path(@application) }, layout: "active_admin"
+        else
+          render template: 'admin/page2', locals: { url: save_page2_admin_application_path(@application) }, layout: "active_admin"
+        end
       else
         render 'admin/page1', locals: { adas: adas, url: save_page1_admin_application_path(@application) }, layout: "active_admin"
       end
@@ -279,6 +298,7 @@ ActiveAdmin.register Application do
           application.comments.where(status: "accept").map(&:body).join("</br>").html_safe
         end
       end
+      # todo: add competence ecc
       translate_attributes_table_with_label_for application do
         row :title
         row :url
@@ -296,7 +316,7 @@ ActiveAdmin.register Application do
       row :nqf_level_in
       row :nqf_level_out
       row :language
-      # row :rule
+      row :rule
       row :source
       row :admission
       row :atecos
@@ -308,6 +328,39 @@ ActiveAdmin.register Application do
             column :duration
             column :institution
             column :manner
+          end
+        end
+      end
+      attributes_table_for application.competences do
+        div class: "panel" do
+          h3 "Compentenze"
+          if application.competences && application.competences.count > 0
+            application.competences.each do |competence|
+              div class: "panel_contents" do
+                div class: "attributes_table" do
+                  table do
+                    tr do
+                      th("#{I18n.t("activerecord.attributes.competence.competence")}: #{competence.competence}", colspan: 3 )
+                    end
+                    tr do
+                      th I18n.t("activerecord.models.knowledge", count: competence.knowledges.count)
+                      th I18n.t("activerecord.models.ability", count: competence.abilities.count)
+                      th I18n.t("activerecord.models.responsibility", count: competence.responsibilities.count)
+                    end
+                    tbody do
+                      max = [competence.knowledges.count, competence.abilities.count, competence.responsibilities.count].max
+                      max.times do |i|
+                        tr do
+                          td(competence.knowledges[i].try(:knowledge), width: '33%')
+                          td(competence.abilities[i].try(:ability), width: '33%')
+                          td(competence.responsibilities[i].try(:responsibility), width: '33%')
+                        end
+                      end
+                    end
+                  end
+                end
+              end
+            end
           end
         end
       end
@@ -343,8 +396,58 @@ ActiveAdmin.register Application do
       render template: 'admin/page1', locals: { adas: adas, url: admin_applications_path }, layout: "active_admin"
     end
 
+    def build_desc(a, step)
+      r = {}
+      begin
+        return a if params["build_nested"] != "true"
+        filepath = Rails.root.join("lib", './sample-data.json')
+        if File.exist?(filepath)
+          file = File.read(filepath)
+          json = JSON.parse(file)
+          r = json.select { |a| a["uuid"] == params["application"]["atlante"].to_i }
+        end
+
+        result = r[0]
+        # a.competences.destroy_all
+        a.competences.each_with_index do |h, i|
+          h.persisted? ? h.mark_for_destruction : a.competences.delete(h)
+          h.abilities.each do |ha|
+            ha.mark_for_destruction
+          end
+          h.knowledges.each do |hk|
+            hk.mark_for_destruction
+          end
+          h.responsibilities.each do |hr|
+            hr.mark_for_destruction
+          end
+        end
+        a.translations.find_or_initialize_by(locale: 'it')
+        begin
+          u = a.translations.select{ |b| b.locale == :it }.first.title =  result["titolo"]
+        rescue
+          nil
+        end
+        a.translations.find_or_initialize_by(locale: 'en')
+        a.atlante_title = result["titolo"]
+        a.atlante_code = result["codice"]
+        result["competenze"].each do |c|
+          cc = a.competences.build(competence: c["titolo"], atlante_competence: c["titolo"], atlante_code_competence: c["codice"])
+          c["abilita"].each do |a|
+            cc.abilities.build(ability: a["titolo"], atlante_ability: c["titolo"], atlante_code_ability: c["codice"])
+          end
+          c["conoscenze"].each do |a|
+            cc.knowledges.build(knowledge: a["titolo"], atlante_knowledge: c["titolo"], atlante_code_knowledge: c["codice"])
+          end
+        end
+        a
+      rescue
+        a
+      end
+    end
+
     def edit
       @application = Application.find(permitted_params.dig(:id))
+      @application.step = 1
       render template: 'admin/page1', locals: { adas: adas, url: update1_admin_application_path(@application) }, layout: "active_admin"
     end
 
@@ -357,12 +460,11 @@ ActiveAdmin.register Application do
                   if File.exist?(filepath)
                     file = File.read(filepath)
                     json = JSON.parse(file)
-                    json.sort_by { |a| a["titolo"].strip }.map { |a| ["#{a["titolo"]} (Codice: #{a["codice"]})", a["uuid"]] }
+                    json.sort_by { |a| a["titolo"].strip }.map { |a| ["#{a["titolo"]} (Codice: #{a["codice"]}#{Rails.env.development? ? " - UUID #{a["uuid"]}" : ""})", a["uuid"]] }
                   end
                 rescue
                   []
                 end
-
 
     end
 

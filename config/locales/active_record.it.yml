@@ -1,6 +1,18 @@
 it:
   activerecord:
     models:
+      competence:
+        one: Competenza
+        other: Competenze
+      knowledge:
+        one: Conoscenza
+        other: Conoscenze
+      ability:
+        one: Abilità
+        other: Abilità
+      responsibility:
+        one: Responsabilità
+        other: Responsabilità
       paper_trail/version:
         one: Storico modifiche
         other: Storico modifiche
@@ -58,34 +70,55 @@ it:
     attributes:
       paper_trail/version:
         event: Evento
-        atlante: Seleziona una qualificazione già presenti su atlante per autocompletare alcuni campi
+        atlante: Titolo della qualificazione presente in Atlante
+        atlante_desc: Seleziona una qualificazione già presente su atlante per autocompletare alcuni campi
         atlante_code: Codice selezionato da atlante
         atlante_title: Titolo selezionato da atlante
         atlante_region: Regione selezionata da atlante
-        title: Titolo
-        isceds: Settori
-        isced_ids: Settori
+        title: Titolo della qualificazione
+        title_desc: Inserire nell'istanza il nome della qualificazione per la quale si richiede la procedura di referenziazione (ad es. "Addetto stipendi e paghe")
+        isceds: Livello ISCED
+        isced_ids: Livello ISCED
+        isced_ids_desc: Selezionare il livello ISCED della qualificazione oggetto di referenziazione
         advice: Raccomandazione
-        credit: Unità di credito
-        certifying_agency: Ente certificatore
-        guarantee_entity: Organismo esterno di garanzia qualità
-        admission: Requisito di ammissione
-        atecos: Ateco
-        ateco_ids: Ateco
-        cp_istats: CP Istat 2021
-        cp_istat_ids: CP Istat 2021
-        url: URL della qualificazione
-        nqf_level: Livello NQF
-        nqf_level_in: Livello NQF in
-        nqf_level_out: Livello NQF out
+        credit: Unità di Credito
+        credit_desc: Inserire le Unità di Credito necessarie al conseguimento della qualificazione (es. CFU, Crediti scolastici, CFP,  ecc.)
+        certifying_agency: Ente pubblico titolare
+        certifying_agency_desc: Inserire il nome dell'Ente pubblico titolare che presenta l'istanza di referenziazione (es. Ministero dell'Istruzione e del Merito, Regione Abruzzo, ecc.)
+        guarantee_entity: Organismo esterno di Garanzia Qualità
+        admission: Livello EQF di accesso
+        admission_desc: Selezionare il livello EQF di accesso alla qualificazione oggetto di referenziazione
+        atecos: Codice Ateco
+        ateco_ids: Codice Ateco
+        ateco_ids_desc: Selezionare il codice ATECO di riferimento corrispendo alla qualificazione oggetto di referenziazione
+        cp_istats: CP ISTAT
+        cp_istat_ids: CP ISTAT
+        cp_istat_ids_desc: Selezionare nomenclatura e classifficazione delle Unità professionali della CP ISTAT
+        url: URL Qualificazione
+        url_desc: Inserire il link delle qualificazione oggetto di referenziazione se disponibile
+        nqf_level: Livello della Qualificazione nel QnQ
+        nqf_level_desc: Inserire il livello del Quadro Nazionale delle Qualificazioni corrispondente alla Qualificazione oggetto di referenziare (es. IT 4.4.  per i percorsi IFTS). %{link}
+        nqf_level_link: "/rapporto.pdf"
+        nqf_level_link_label: Visualizza
+        nqf_level_in: Livello in entrata della qualificazione nel QnQ
+        nqf_level_in_desc: Inserire il livello del QnQ che permette l'accesso alla qualificazione oggetto di referenziazione (ad es. livello IT 4.2 per Diploma di istruzione secondaria di secondo grado tecnica o professionale,  che permette accesso al livello IT 4.4.  per i percorsi IFTS)
+        nqf_level_out: Livello in uscita della qualificazione nel QnQ
+        nqf_level_out_desc: Inserire il livello del QnQ di presecuzione relativo alla qualificazione oggetto di referenziazione (es. livello IT 5.4, Diploma di tecnico superiore  di durata biennale a seguito del conseguimento del livello IT 4.4 dei percorsi IFTS)
         language: Lingua delle informazioni
+        language_desc: Selezionare la lingua in cui vengono fornite le informazioni sulla qualificazione da referenziare
         created_by: Creato da
         updated_by: Aggiornato da
         in_progress_by: In istruttoria da
-        rule: Collegamento con i relativi supplementi
-        source: Fonte di informazione
-        region: Regione
-        eqf: Livello dell'EQF
+        rule: Link alla normativa di riferimento
+        rule_desc: Inserire i link alla normativa di riferimento in caso di formazione ex lege o formazione come requisito di accesso a professioni regolamentate (ad es. www.impresainungiorno.gov.it, per l'elenco delle professioni regolamentate e le Autorità competenti)
+        source: Fonte degli ordinamenti
+        source_desc: Selezionare  l'ordinamento cui la qualificazione da referenziare fa riferimento
+        region: Paese o Regione in cui si rilascia la qualificazione
+        region_desc: Inserire Italia per qualificazioni rilasciate dal sistema nazionale (es. titoli istruzione formale) o  la specifica Regione per qualificazioni regionali
+        eqf: Livello EQF proposto dall'ente titolare
+        eqf_desc: Inserire il livello EQF proposto dall'ente titolare in fase di referenziazione
+        expiration: Durata della Qualificazione
+        expiration_desc: Indicare la durata e i requisiti di rinnovo della qualificazione, se pertinente
         statuses:
           draft: Bozza
           completed: Inviata
@@ -104,36 +137,73 @@ it:
         updated_at: Aggiornato il
         object: Oggetto
         item_type: Tipo di oggetto
+      competence:
+        competence: Denominazione competenza
+      knowledge:
+        knowledge: Conoscenza
+      ability:
+        ability: Abilità
+      responsibility:
+        responsibility: Responsabilità
       application:
-        atlante: Seleziona una qualificazione già presenti su atlante per autocompletare alcuni campi
+        add_competence: Aggiungi competenza
+        remove_competence: Rimuovi competenza
+        add_knowledge: Aggiungi conoscenza
+        remove_knowledge: Rimuovi conoscenza
+        add_ability: Aggiungi abilità
+        remove_ability: Rimuovi abilità
+        add_responsibility: Aggiungi responsabilità
+        remove_responsibility: Rimuovi responsabilità
+        atlante: Titolo della qualificazione presente in Atlante
+        atlante_desc: Seleziona una qualificazione già presente su atlante per autocompletare alcuni campi
         atlante_code: Codice selezionato da atlante
         atlante_title: Titolo selezionato da atlante
         atlante_region: Regione selezionata da atlante
-        title: Titolo
+        title: Titolo della qualificazione
+        title_desc: Inserire nell'istanza il nome della qualificazione per la quale si richiede la procedura di referenziazione (ad es. "Addetto stipendi e paghe")
+        certifying_agency: Ente pubblico titolare
+        certifying_agency_desc: Inserire il nome dell'Ente pubblico titolare che presenta l'istanza di referenziazione (es. Ministero dell'Istruzione e del Merito, Regione Abruzzo, ecc.)
         comments: Richieste
-        isceds: Settori
-        isced_ids: Settori
+        isceds: Livello ISCED
+        isced_ids: Livello ISCED
+        isced_ids_desc: Selezionare il livello ISCED della qualificazione oggetto di referenziazione
         advice: Raccomandazione
-        credit: Unità di credito
-        certifying_agency: Ente certificatore
-        guarantee_entity: Organismo esterno di garanzia qualità
-        admission: Requisito di ammissione
-        atecos: Ateco
-        ateco_ids: Ateco
-        cp_istats: CP Istat 2021
-        cp_istat_ids: CP Istat 2021
-        url: URL della qualificazione
-        nqf_level: Livello NQF
-        nqf_level_in: Livello NQF in
-        nqf_level_out: Livello NQF out
+        credit: Unità di Credito
+        credit_desc: Inserire le Unità di Credito necessarie al conseguimento della qualificazione (es. CFU, Crediti scolastici, CFP,  ecc.)
+        guarantee_entity: Organismo esterno di Garanzia Qualità
+        admission: Livello EQF di accesso
+        admission_desc: Selezionare il livello EQF di accesso alla qualificazione oggetto di referenziazione
+        atecos: Codice Ateco
+        ateco_ids: Codice Ateco
+        ateco_ids_desc: Selezionare il codice ATECO di riferimento corrispendo alla qualificazione oggetto di referenziazione
+        cp_istats: CP ISTAT
+        cp_istat_ids: CP ISTAT
+        cp_istat_ids_desc: Selezionare nomenclatura e classifficazione delle Unità professionali della CP ISTAT
+        url: URL Qualificazione
+        url_desc: Inserire il link delle qualificazione oggetto di referenziazione se disponibile
+        nqf_level: Livello della Qualificazione nel QnQ
+        nqf_level_desc: Inserire il livello del Quadro Nazionale delle Qualificazioni corrispondente alla Qualificazione oggetto di referenziare (es. IT 4.4.  per i percorsi IFTS). %{link}
+        nqf_level_link: "/rapporto.pdf"
+        nqf_level_link_label: Visualizza
+        nqf_level_in: Livello in entrata della qualificazione nel QnQ
+        nqf_level_in_desc: Inserire il livello del QnQ che permette l'accesso alla qualificazione oggetto di referenziazione (ad es. livello IT 4.2 per Diploma di istruzione secondaria di secondo grado tecnica o professionale,  che permette accesso al livello IT 4.4.  per i percorsi IFTS)
+        nqf_level_out: Livello in uscita della qualificazione nel QnQ
+        nqf_level_out_desc: Inserire il livello del QnQ di presecuzione relativo alla qualificazione oggetto di referenziazione (es. livello IT 5.4, Diploma di tecnico superiore  di durata biennale a seguito del conseguimento del livello IT 4.4 dei percorsi IFTS)
         language: Lingua delle informazioni
+        language_desc: Selezionare la lingua in cui vengono fornite le informazioni sulla qualificazione da referenziare
         created_by: Creato da
         updated_by: Aggiornato da
         in_progress_by: In istruttoria da
-        rule: Collegamento con i relativi supplementi
-        source: Fonte di informazione
-        region: Regione
-        eqf: Livello dell'EQF
+        rule: Link alla normativa di riferimento
+        rule_desc: Inserire i link alla normativa di riferimento in caso di formazione ex lege o formazione come requisito di accesso a professioni regolamentate (ad es. www.impresainungiorno.gov.it, per l'elenco delle professioni regolamentate e le Autorità competenti)
+        source: Fonte degli ordinamenti
+        source_desc: Selezionare  l'ordinamento cui la qualificazione da referenziare fa riferimento
+        region: Paese o Regione in cui si rilascia la qualificazione
+        region_desc: Inserire Italia per qualificazioni rilasciate dal sistema nazionale (es. titoli istruzione formale) o  la specifica Regione per qualificazioni regionali
+        eqf: Livello EQF proposto dall'ente titolare
+        eqf_desc: Inserire il livello EQF proposto dall'ente titolare in fase di referenziazione
+        expiration: Durata della Qualificazione
+        expiration_desc: Indicare la durata e i requisiti di rinnovo della qualificazione, se pertinente
         created_at: Creato il
         updated_at: Aggiornato il
         statuses:
@@ -147,7 +217,9 @@ it:
           accepted_with_advice: Accettata con raccomandazione
       application/translation:
         title: Titolo
-        url: URL della qualificazione
+        title_desc: Inserire  nell'istanza il nome della qualificazione per la quale si richiede la procedura di referenziazione (ad es. "Addetto stipendi e paghe")
+        url: URL Qualificazione
+        url_desc: Inserire il link delle qualificazione oggetto di referenziazione se disponibile
       cp_istat:
         name: Nome
         code: Codice

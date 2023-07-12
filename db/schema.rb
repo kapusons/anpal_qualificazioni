@@ -10,7 +10,17 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_06_15_134032) do
+ActiveRecord::Schema[7.0].define(version: 2023_07_12_082650) do
+  create_table "abilities", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "competence_id"
+    t.string "ability"
+    t.string "atlante_ability"
+    t.string "atlante_code_ability"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["competence_id"], name: "index_abilities_on_competence_id"
+  end
+
   create_table "action_text_rich_texts", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name", null: false
     t.text "body", size: :long
@@ -123,7 +133,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_15_134032) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "title"
-    t.text "description"
     t.string "url"
     t.index ["application_id"], name: "index_application_translations_on_application_id"
     t.index ["locale"], name: "index_application_translations_on_locale"
@@ -145,13 +154,13 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_15_134032) do
     t.bigint "nqf_level_in_id"
     t.bigint "nqf_level_out_id"
     t.bigint "language_id"
-    t.bigint "rule_id"
     t.bigint "admission_id"
     t.bigint "created_by_id"
     t.bigint "updated_by_id"
     t.string "status"
     t.bigint "in_progress_by_id"
     t.bigint "source_id"
+    t.string "rule"
     t.index ["admission_id"], name: "index_applications_on_admission_id"
     t.index ["certifying_agency_id"], name: "index_applications_on_certifying_agency_id"
     t.index ["created_by_id"], name: "index_applications_on_created_by_id"
@@ -163,7 +172,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_15_134032) do
     t.index ["nqf_level_in_id"], name: "index_applications_on_nqf_level_in_id"
     t.index ["nqf_level_out_id"], name: "index_applications_on_nqf_level_out_id"
     t.index ["region_id"], name: "index_applications_on_region_id"
-    t.index ["rule_id"], name: "index_applications_on_rule_id"
     t.index ["source_id"], name: "index_applications_on_source_id"
     t.index ["updated_by_id"], name: "index_applications_on_updated_by_id"
   end
@@ -183,6 +191,16 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_15_134032) do
     t.string "name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "competences", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "application_id"
+    t.string "atlante_competence"
+    t.string "atlante_code_competence"
+    t.string "competence"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["application_id"], name: "index_competences_on_application_id"
   end
 
   create_table "cp_istats", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -209,6 +227,16 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_15_134032) do
     t.string "name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "knowledges", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "competence_id"
+    t.string "knowledge"
+    t.string "atlante_knowledge"
+    t.string "atlante_code_knowledge"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["competence_id"], name: "index_knowledges_on_competence_id"
   end
 
   create_table "languages", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -253,10 +281,14 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_15_134032) do
     t.datetime "updated_at", null: false
   end
 
-  create_table "rules", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
-    t.string "name"
+  create_table "responsibilities", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "competence_id"
+    t.string "responsibility"
+    t.string "atlante_responsibility"
+    t.string "atlante_code_responsibility"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["competence_id"], name: "index_responsibilities_on_competence_id"
   end
 
   create_table "sources", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -287,6 +319,5 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_15_134032) do
   add_foreign_key "applications", "nqf_level_outs"
   add_foreign_key "applications", "nqf_levels"
   add_foreign_key "applications", "regions"
-  add_foreign_key "applications", "rules"
   add_foreign_key "applications", "sources"
 end

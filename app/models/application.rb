@@ -18,15 +18,14 @@
 #  nqf_level_in_id      :bigint
 #  nqf_level_out_id     :bigint
 #  language_id          :bigint
-#  rule_id              :bigint
 #  admission_id         :bigint
 #  created_by_id        :bigint
 #  updated_by_id        :bigint
 #  status               :string(255)
 #  in_progress_by_id    :bigint
 #  source_id            :bigint
+#  rule                 :string(255)
 #  title                :string(255)
-#  description          :text(65535)
 #  url                  :string(255)
 #
 class Application < ApplicationRecord
@@ -39,17 +38,18 @@ class Application < ApplicationRecord
                     title: proc { |a| true }, # in meta_objects
                     url: proc { |a| true }, # in meta_objects
                     meta_objects: proc { |a| false }, # all step
-                    region_id: proc { |a| a.step != 1 },
-                    credit: proc { |a| a.step != 1 },
-                    nqf_level_id: proc { |a| a.step != 1 },
-                    nqf_level_in_id: proc { |a| a.step != 1 },
-                    nqf_level_out_id: proc { |a| a.step != 1 },
+                    region_id: proc { |a| a.step != 2 },
+                    credit: proc { |a| a.step != 2 },
+                    nqf_level_id: proc { |a| a.step != 2 },
+                    nqf_level_in_id: proc { |a| a.step != 2 },
+                    nqf_level_out_id: proc { |a| a.step != 2 },
                     eqf_id: proc { |a| a.step != 2 },
                     certifying_agency_id: proc { |a| a.step != 2 },
                     guarantee_entity_id: proc { |a| a.step != 2 },
                     language_id: proc { |a| a.step != 2 },
                     source_id: proc { |a| a.step != 2 },
                     admission_id: proc { |a| a.step != 2 },
+                    rule: proc { |a| a.step != 2 },
                     id: proc { |a| true },
                     created_at: proc { |a| true },
                     updated_at:  proc { |a| true },
@@ -57,12 +57,10 @@ class Application < ApplicationRecord
                     atlante_code:  proc { |a| true },
                     atlante_title:  proc { |a| true },
                     guarantee_process:  proc { |a| true },
-                    rule_id:  proc { |a| true },
                     created_by_id:  proc { |a| true },
                     updated_by_id:  proc { |a| true },
                     status:  proc { |a| true },
-                    in_progress_by_id:  proc { |a| true },
-                    description:  proc { |a| true },
+                    in_progress_by_id:  proc { |a| true }
                   }
 
   aasm column: 'status' do
@@ -97,8 +95,8 @@ class Application < ApplicationRecord
     end
   end
 
-  attr_accessor :step, :atlante, :skip_validation
-  translates :title, :description, :url, fallbacks_for_empty_translations: false
+  attr_accessor :step, :atlante, :skip_validation, :storing_version
+  translates :title, :url, fallbacks_for_empty_translations: false
 
   belongs_to :region, optional: true
   belongs_to :eqf, optional: true
@@ -108,7 +106,6 @@ class Application < ApplicationRecord
   belongs_to :nqf_level_in, optional: true
   belongs_to :nqf_level_out, optional: true
   belongs_to :language, optional: true
-  belongs_to :rule, optional: true
   belongs_to :source, optional: true
   belongs_to :admission, optional: true
   has_many :application_atecos
@@ -118,6 +115,10 @@ class Application < ApplicationRecord
   has_many :application_isceds
   has_many :isceds, through: :application_isceds
   has_many :learning_opportunities
+  has_many :competences
+  has_many :knowledges, through: :competences, class_name: 'Knowledge'
+  has_many :responsibilities, through: :competences, class_name: 'Responsibility'
+  has_many :abilities, through: :competences, class_name: 'Ability'
   belongs_to :created_by, class_name: "AdminUser"
   belongs_to :updated_by, class_name: "AdminUser"
   belongs_to :in_progress_by, class_name: "AdminUser", optional: true
@@ -153,23 +154,24 @@ class Application < ApplicationRecord
     filtered
   }
 
-  STEP_1_FIELD_TO_VALIDATE = [:title, :url, :region, :nqf_level, :nqf_level_in, :nqf_level_out, :isced_ids, :credit]
+  STEP_1_FIELD_TO_VALIDATE = [:title]
   validates :title, presence: true, if: :need_validate_1?
-  validates :url, presence: true, if: :need_validate_1?
-  validates :region, presence: true, if: :need_validate_1?
-  validates :nqf_level, presence: true, if: :need_validate_1?
-  validates :nqf_level_in, presence: true, if: :need_validate_1?
-  validates :nqf_level_out, presence: true, if: :need_validate_1?
-  validates :isced_ids, presence: true, if: :need_validate_1?
-  validates :credit, numericality: { only_integer: true, allow_blank: true }, if: :need_validate_1?
+  # validates :url, presence: true, if: :need_validate_1?
 
-  STEP_2_FIELD_TO_VALIDATE = [:language, :source, :admission, :certifying_agency, :eqf]
+  STEP_2_FIELD_TO_VALIDATE = [:rule, :region, :nqf_level, :nqf_level_in, :nqf_level_out, :isced_ids, :credit, :language, :source, :admission, :certifying_agency, :eqf]
   # validates :expiration_date, presence: true, if: -> { on_step(2) }
   validates :language, presence: true, if: :need_validate_2?
   validates :source, presence: true, if: :need_validate_2?
   validates :admission, presence: true, if: :need_validate_2?
   validates :certifying_agency, presence: true, if: :need_validate_2?
   validates :eqf, presence: true, if: :need_validate_2?
+  validates :region, presence: true, if: :need_validate_2?
+  validates :nqf_level, presence: true, if: :need_validate_2?
+  validates :nqf_level_in, presence: true, if: :need_validate_2?
+  validates :nqf_level_out, presence: true, if: :need_validate_2?
+  validates :isced_ids, presence: true, if: :need_validate_2?
+  validates :rule, presence: true, if: :need_validate_2?
+  validates :credit, numericality: { only_integer: true, allow_blank: true }, if: :need_validate_2?
 
   # todo: verificare presenza di errori nello step3
   STEP_3_FIELD_TO_VALIDATE = []
@@ -182,12 +184,9 @@ class Application < ApplicationRecord
     (!skip_validation && on_step(2)) || on_step(3)
   end
 
-  accepts_nested_attributes_for :translations, allow_destroy: true, reject_if: proc { |att| att['description'].blank? && att['title'].blank? }
+  accepts_nested_attributes_for :translations, allow_destroy: true, reject_if: proc { |att| att['url'].blank? && att['title'].blank? }
   accepts_nested_attributes_for :learning_opportunities, allow_destroy: true, reject_if: :all_blank
-
-  class Translation
-    # has_rich_text :description
-  end
+  accepts_nested_attributes_for :competences, allow_destroy: true, reject_if: :all_blank
 
   def on_step(step_number)
     step == step_number || step.nil?
@@ -202,27 +201,39 @@ class Application < ApplicationRecord
   end
 
   def version_fields
-    [:region, :nqf_level, :nqf_level_in, :nqf_level_out, :credit] +
+    [:region, :rule, :nqf_level, :nqf_level_in, :nqf_level_out, :credit] +
       [:language, :source, :admission, :certifying_agency, :eqf]
   end
   
   def store_version(step)
     if self.integration_required?
       self.paper_trail_event = step
-      self.paper_trail.save_with_version
+      self.storing_version = true
+      self.paper_trail.save_with_version(validate: false)
+      self.storing_version
     end
   end
 
   def meta_objects
-    hash = {
-      isced_ids: isced_ids,
-      ateco_ids: ateco_ids,
-      cp_istat_ids: cp_istat_ids,
-    }
-    Application.translated_attribute_names.each do |field|
-      hash[field] = I18n.available_locales.inject({}) { |r, locale| r.merge({ locale => self.send("#{field}_translations").try(:[], locale) }) }
+    if self.step == 1
+      hash = {
+        desc: desc
+      }
+      Application.translated_attribute_names.each do |field|
+        hash[field] = I18n.available_locales.inject({}) { |r, locale| r.merge({ locale => self.send("#{field}_translations").try(:[], locale) }) }
+      end
+    else
+      hash = {
+        isced_ids: isced_ids,
+        ateco_ids: ateco_ids,
+        cp_istat_ids: cp_istat_ids,
+      }
     end
     hash
+  end
+
+  def desc
+    JSON.parse(self.competences.to_json(except: [:created_at, :updated_at], include: [ knowledges: { except: [:created_at, :updated_at]  }, abilities: { except: [:created_at, :updated_at]  }, responsibilities: { except: [:created_at, :updated_at]  }]))
   end
 
 end

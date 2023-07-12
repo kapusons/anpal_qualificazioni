@@ -14,20 +14,36 @@
       # end
       end
     f.inputs class: "inputs columns" do
-      f.input :eqf, as: :select, collection: Eqf.all.map { |a| [a.name, a.id] }, required: true
-      f.input :certifying_agency, as: :select, collection: CertifyingAgency.all.map { |a| [a.name, a.id] }, required: true
+      f.input :isced_ids, as: :select, collection: Isced.all.map { |a| [a.name, a.id] }, multiple: true, required: true, desc: true
+      f.input :region, as: :select, collection: Region.all.map { |a| [a.name, a.id] }, required: true, desc: true
+    end
+    f.inputs class: "inputs columns" do
+      f.input :credit, input_html: { type: 'number' }, desc: true
+      f.input :nqf_level, as: :select, collection: NqfLevel.all.map { |a| [a.name, a.id] }, required: true, desc: true
+    end
+    f.inputs class: "inputs columns" do
+      f.input :nqf_level_in, as: :select, collection: NqfLevelIn.all.map { |a| [a.name, a.id] }, required: true, desc: true
+      f.input :nqf_level_out, as: :select, collection: NqfLevelOut.all.map { |a| [a.name, a.id] }, required: true, desc: true
+
+    end
+    f.inputs class: "inputs columns" do
+      f.input :eqf, as: :select, collection: Eqf.all.map { |a| [a.name, a.id] }, required: true, desc: true
+      f.input :certifying_agency, as: :select, collection: CertifyingAgency.all.map { |a| [a.name, a.id] }, required: true, desc: true
     end
     f.inputs class: "inputs columns" do
       f.input :guarantee_entity, as: :select, collection: GuaranteeEntity.all.map { |a| [a.name, a.id] }
-      f.input :language, as: :select, collection: Language.all.map { |a| [a.name, a.id] }, required: true
+      f.input :language, as: :select, collection: Language.all.map { |a| [a.name, a.id] }, required: true, desc: true
     end
     f.inputs class: "inputs columns" do
-      f.input :source, as: :select, collection: Source.all.map { |a| [a.name, a.id] }, required: true
-      f.input :admission, as: :select, collection: Admission.all.map { |a| [a.name, a.id] }, required: true
+      f.input :source, as: :select, collection: Source.all.map { |a| [a.name, a.id] }, required: true, desc: true
+      f.input :admission, as: :select, collection: Admission.all.map { |a| [a.name, a.id] }, required: true, desc: true
     end
     f.inputs class: "inputs columns" do
-      f.input :ateco_ids, as: :select, collection: Ateco.all.sort_by { |v| Gem::Version.new(v.code_category) }.map { |a| [a.display_name, a.id] }, multiple: true
-      f.input :cp_istat_ids, as: :select, collection: CpIstat.all.sort_by { |v| Gem::Version.new(v.code) }.map { |a| [a.display_name, a.id] }, multiple: true
+      f.input :ateco_ids, as: :select, collection: Ateco.all.sort_by { |v| Gem::Version.new(v.code_category) }.map { |a| [a.display_name, a.id] }, multiple: true, desc: true
+      f.input :cp_istat_ids, as: :select, collection: CpIstat.all.sort_by { |v| Gem::Version.new(v.code) }.map { |a| [a.display_name, a.id] }, multiple: true, desc: true
+    end
+    f.inputs class: "inputs columns" do
+      f.input :rule, desc: true
     end
     f.actions do
       f.action :submit, label: I18n.t("active_admin.actions.application.send")

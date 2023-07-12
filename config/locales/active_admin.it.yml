@@ -33,7 +33,7 @@ it:
       review: Invia ad INAPP
       add_learning_opportunities: Aggiungi learning opportunity
       sent_to_inapp: "L'istanza è stata inviata correttamente ad INAPP."
-      confim_ada_selection: "Attenzione: confermando l'operazione alcuni valori potrebbereo essere sostituiti con quelli derivanti da Atlante."
+      confim_ada_selection: "Attenzione: confermando l'operazione alcuni valori potrebbero essere definitivamente sostituiti con quelli derivanti da Atlante."
     filters:
       location:
         code_eq: Codice

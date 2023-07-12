@@ -132,3 +132,91 @@
   background: $am-theme-primary;
   color: white;
 }
+
+.input > .input-desc {
+  margin: 0;
+  display: block;
+  line-height: 16px;
+  font: 400 0.75rem/16px "RobotoDraft", sans-serif;
+  margin-bottom: 8px;
+  position: relative;
+  transition: 0.28s all;
+  width: 100%;
+}
+
+.has_many_container {
+  position: relative;
+  &.competences {
+    > h3 {
+      font-size: 1rem;
+    }
+    > fieldset {
+      margin: 20px;
+      border: 1px solid #cdcdcd;
+    }
+    .inputs.has_many_fields {
+      position: relative;
+    }
+    .has_many_delete.customized {
+      position: absolute;
+      top: 38px;
+      right: 0px;
+    }
+    .has_many_add.customized {
+      position: absolute;
+      top: -20px;
+      left: 90px;
+    }
+    .has_many_remove.customized {
+      position: absolute;
+      right: 16px;
+      top: 40px;
+      padding: 0;
+      margin: 0;
+    }
+  }
+  &.knowledges,
+  &.abilities,
+  &.responsibilities {
+    padding-bottom: 16px;
+    .has_many_delete.customized {
+      position: absolute;
+      top: 22px;
+      right: 15px;
+    }
+    .has_many_remove.customized {
+      position: absolute;
+      right: 16px;
+      top: 8px;
+      padding: 0;
+      margin: 0;
+    }
+    li:not(.boolean) {
+      label {
+        display: none;
+      }
+    }
+    .inputs.has_many_fields {
+      margin-bottom: 0;
+      position: relative;
+      fieldset.inputs {
+        margin-bottom: 0;
+        li {
+          padding: 0 16px;
+        }
+      }
+    }
+  }
+}
+
+
+.has_many_container.knowledges fieldset.inputs.has_many_fields > ol > li,
+.has_many_container.abilities fieldset.inputs.has_many_fields > ol > li,
+.has_many_container.responsibilities fieldset.inputs.has_many_fields > ol > li {
+  margin: 0;
+  padding: 0;
+}
+
+//a.button.has_many_remove {
+//  display: none;
+//}

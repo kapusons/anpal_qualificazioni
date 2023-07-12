@@ -27,7 +27,20 @@ module ActiveAdmin
               next
             end
             new_obj.object = YAML.dump(YAML.load(new_obj.object, permitted_classes: [Time]).merge(YAML.load(co.object, permitted_classes: [Time])))
-            new_obj.meta_objects = co.meta_objects
+            d = nil
+            if co.event == "step1"
+              hash = { }
+              f = co.meta_objects.slice("desc", "title", "url").delete_if {  |k, v| v.empty? || v.all?{ |a| a.blank? } }
+              # d = co.meta_objects.slice("desc").delete_if {  |k, v| v.empty? || v.all?{ |a| a.blank? } }.try(:[], "desc")
+              hash = f if f.present?
+            elsif co.event == "step2"
+              hash = co.meta_objects.slice("ateco_ids", "cp_istat_ids", "isced_ids")
+            else
+              hash = { }
+            end
+            # new_obj.meta_objects["desc"] = [] if new_obj.meta_objects["desc"].nil?
+            # new_obj.meta_objects["desc"] += d if d.present?
+            new_obj.meta_objects.merge!(hash)
           end
         end
 
@@ -67,8 +80,19 @@ module ActiveAdmin
             header_content_for(title)
           end
           @collection.each do |record|
+            td(width: 60) do
+              strong do
+                "#{locale.to_s}"
+              end
+            end
             td do
-              content_for(record, block || title)
+              if block_given?
+                block.call(@collection.first, resource, locale.to_s)
+              else
+                # resource.translation_for(locale).send(attr) || empty_value
+                content_for(record, block || title)
+              end
+
             end
           end
         end
