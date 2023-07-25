@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_07_12_082650) do
+ActiveRecord::Schema[7.0].define(version: 2023_07_25_142527) do
   create_table "abilities", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "competence_id"
     t.string "ability"
@@ -193,6 +193,16 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_12_082650) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "cities", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "province_id"
+    t.string "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "code_catastale"
+    t.string "code_numerico"
+    t.index ["province_id"], name: "index_cities_on_province_id"
+  end
+
   create_table "competences", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "application_id"
     t.string "atlante_competence"
@@ -248,13 +258,22 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_12_082650) do
 
   create_table "learning_opportunities", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "application_id"
-    t.string "location"
     t.string "duration"
     t.string "manner"
     t.string "institution"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "region_id"
+    t.bigint "province_id"
+    t.bigint "city_id"
+    t.date "start_at"
+    t.date "end_at"
+    t.string "url"
+    t.text "description"
     t.index ["application_id"], name: "index_learning_opportunities_on_application_id"
+    t.index ["city_id"], name: "index_learning_opportunities_on_city_id"
+    t.index ["province_id"], name: "index_learning_opportunities_on_province_id"
+    t.index ["region_id"], name: "index_learning_opportunities_on_region_id"
   end
 
   create_table "nqf_level_ins", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -273,6 +292,15 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_12_082650) do
     t.string "name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "provinces", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "region_id"
+    t.string "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "code"
+    t.index ["region_id"], name: "index_provinces_on_region_id"
   end
 
   create_table "regions", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|

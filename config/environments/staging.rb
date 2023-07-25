@@ -62,11 +62,11 @@ Rails.application.configure do
   config.action_mailer.raise_delivery_errors = true
   config.action_mailer.delivery_method = :smtp
   config.action_mailer.smtp_settings = {
-    :address              => 'xxxxxxx',
+    :address              => 'smtp-relay.brevo.com',
     :port                 =>  587,
-    :domain               => 'xxxxxxx.xxx',
-    :user_name            => 'xxxxxxx',
-    :password             => 'xxxxxxxxx',
+    :domain               => 'anpal.kapusons.it',
+    :user_name            => 'acquisti@kapusons.it',
+    :password             => 'xsmtpsib-1572857fbcd7b3fb217855576fadbb4188251f25d0aa6dc220f18a6e479072f0-NV2jScrzGEOhP18U',
     :authentication       => 'plain',
     :openssl_verify_mode    => "none"
   }

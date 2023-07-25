@@ -1,4 +1,8 @@
 it:
+  date:
+    formats:
+      custom: "dd/mm/yy"
+      ruby_custom: "%d/%m/%Y"
   active_admin:
     new: Aggiungi
     create: Aggiungi

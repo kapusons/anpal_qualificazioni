@@ -1,6 +1,12 @@
 //= require active_admin/base
 //= require activeadmin_addons/all
 //= require active_material
+//= require it
+//= require datepicker-it
+
+$.fn.select2.defaults.set('language', $.fn.select2.amd.require("select2/i18n/it"));
+
+$.datepicker.setDefaults({}, $.datepicker.regional['it']);
 
 $(document).ready(function () {
 
@@ -20,19 +26,30 @@ $(document).ready(function () {
 
     function changeRemoveIcon(fieldset) {
         let removeButton = fieldset.find('> ol > li > .button.has_many_remove');
-        removeButton.html('<span class="fa-2x"><i class="fa fa-trash"></i></span>');
-        let input = fieldset.find('input:visible').not(":checkbox");
-        input.css("width", 'calc(100% - 40px)')
-        removeButton.addClass("customized")
-        removeButton.insertAfter(input)
+        if (fieldset.closest('.learning_opportunities').length > 0)
+        {
+            removeButton.addClass("customized-learning-opportunity")
+        } else {
+            removeButton.html('<span class="fa-2x"><i class="fa fa-trash"></i></span>');
+            let input = fieldset.find('input:visible').not(":checkbox");
+            input.css("width", 'calc(100% - 40px)')
+            removeButton.addClass("customized")
+            removeButton.insertAfter(input)
+        }
     }
 
     function changeDeleteInput(fieldset) {
         let removeButton = fieldset.find('> ol > li.boolean.has_many_delete');
-        stripText(removeButton.find('label'));
-        let input = fieldset.find("input:visible").not(":checkbox");
-        input.css("width", 'calc(100% - 40px)')
-        removeButton.addClass("customized").attr('title', 'Rimuovi al salvataggio');
+        if (fieldset.closest('.learning_opportunities').length > 0)
+        {
+            removeButton.addClass("customized-learning-opportunity")
+        } else {
+            stripText(removeButton.find('label'));
+            let input = fieldset.find("input:visible").not(":checkbox");
+            input.css("width", 'calc(100% - 40px)')
+            removeButton.addClass("customized").attr('title', 'Rimuovi al salvataggio');
+        }
+
     }
 
 

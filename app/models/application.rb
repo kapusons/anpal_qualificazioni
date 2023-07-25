@@ -158,7 +158,7 @@ class Application < ApplicationRecord
   validates :title, presence: true, if: :need_validate_1?
   # validates :url, presence: true, if: :need_validate_1?
 
-  STEP_2_FIELD_TO_VALIDATE = [:rule, :region, :nqf_level, :nqf_level_in, :nqf_level_out, :isced_ids, :credit, :language, :source, :admission, :certifying_agency, :eqf]
+  STEP_2_FIELD_TO_VALIDATE = [:region, :nqf_level, :nqf_level_in, :nqf_level_out, :isced_ids, :credit, :language, :source, :admission, :certifying_agency, :eqf]
   # validates :expiration_date, presence: true, if: -> { on_step(2) }
   validates :language, presence: true, if: :need_validate_2?
   validates :source, presence: true, if: :need_validate_2?
@@ -170,7 +170,7 @@ class Application < ApplicationRecord
   validates :nqf_level_in, presence: true, if: :need_validate_2?
   validates :nqf_level_out, presence: true, if: :need_validate_2?
   validates :isced_ids, presence: true, if: :need_validate_2?
-  validates :rule, presence: true, if: :need_validate_2?
+  # validates :rule, presence: true, if: :need_validate_2?
   validates :credit, numericality: { only_integer: true, allow_blank: true }, if: :need_validate_2?
 
   # todo: verificare presenza di errori nello step3

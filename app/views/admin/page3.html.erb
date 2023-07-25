@@ -2,10 +2,25 @@
   active_admin_form_for [:admin, @application], url: url do |f|
     f.inputs do
       f.has_many :learning_opportunities, allow_destroy: true, class: "columns" do |b|
-        b.input :location
+        b.input :city, as: :nested_select,
+                level_1: { attribute: :region_id },
+                level_2: { attribute: :province_id },
+                level_3: { attribute: :city_id }, input_html: { lang: "it" }
         b.input :duration
         b.input :institution
         b.input :manner
+        b.input :start_at, as: :datepicker,
+                datepicker_options: {
+                  date_format:  I18n.t("date.formats.custom")
+                }, input_html: { value: b.object.start_at.try(:strftime, I18n.t("date.formats.ruby_custom")) }
+        b.input :end_at, as: :datepicker,
+                datepicker_options: {
+                  # min_date: 3.days.ago.to_date,
+                  # max_date: "+1W +5D"
+                  date_format: I18n.t("date.formats.custom")
+                }, input_html: { value: b.object.end_at.try(:strftime, I18n.t("date.formats.ruby_custom")) }
+        b.input :url
+        b.input :description, as: :text
       end
       f.actions do
         f.action :submit, label: I18n.t("active_admin.actions.application.save")

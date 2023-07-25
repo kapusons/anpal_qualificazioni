@@ -12,8 +12,14 @@ class CanCanAbility
     end
 
     if user.level_1?
+      can :read, Region
+      can :read, Province
+      can :read, City
       can [:create, :update], Application, Application.created_from(user) do |application|
         application.created_by == user && (application.draft? || application.integration_required? )
+      end
+      can [:learning_opportunity], Application, Application.created_from(user) do |application|
+        application.created_by == user && (application.accepted_with_advice? || application.accepted? )
       end
       can :read, Application, Application.created_from(user) do |application|
         application.created_by == user
@@ -45,6 +51,9 @@ class CanCanAbility
       #   comment.resource.in_progress?
       # end
     elsif user.level_3?
+      can :read, Region
+      can :read, Province
+      can :read, City
       can :read, AdminUser
       can [:read], Application, Application.not_in_draft do |aa|
         Application.not_in_draft

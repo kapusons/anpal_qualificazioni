@@ -8,7 +8,7 @@ ActiveAdmin.register Application do
                                                                                                         knowledges_attributes: [:id, :_destroy, :knowledge, :atlante_knowledge, :atlante_code_knowledge],
                                                                                                         abilities_attributes: [:id, :_destroy, :ability, :atlante_ability, :atlante_code_ability],
                                                                                                         responsibilities_attributes: [:id, :_destroy, :responsibility, :atlante_responsibility, :atlante_code_responsibility],],
-                translations_attributes: [:id, :locale, :title, :url], learning_opportunities_attributes: [:id, :_destroy, :application_id, :location, :duration, :manner, :institution]
+                translations_attributes: [:id, :locale, :title, :url], learning_opportunities_attributes: [:id, :_destroy, :application_id, :region_id, :province_id, :city_id, :duration, :manner, :institution, :start_at, :end_at, :description, :url]
   actions :all, except: [:create, :update]
 
   filter :translations_title_contains, label: I18n.t("active_admin.filters.application.translations_title_contains")
@@ -186,7 +186,7 @@ ActiveAdmin.register Application do
 
   member_action :page3, method: :get do
     @application = Application.find(params[:id])
-    if authorized?(ActiveAdmin::Auth::UPDATE, @application)
+    if authorized?(:learning_opportunity, @application)
       @application.learning_opportunities.blank? ? @application.learning_opportunities.build : []
       @application.step = 3
       render template: 'admin/page3', locals: { adas: adas, url: save_page3_admin_application_path(@application) }, layout: "active_admin"
@@ -198,7 +198,7 @@ ActiveAdmin.register Application do
 
   member_action :save_page3, method: [:put, :patch] do
     @application = Application.find(params[:id])
-    if authorized?(ActiveAdmin::Auth::UPDATE, @application)
+    if authorized?(:learning_opportunity, @application)
       @application.step = 3
       # Per salvarmi i precedente valore
       # @application.store_version("step3")
@@ -263,7 +263,7 @@ ActiveAdmin.register Application do
       if authorized?(:review, a)
         links += link_to t('active_admin.applications.review'), review_admin_application_path(a)
       end
-      if (a.accepted? || a.accepted_with_advice?) && (current_admin_user.super_admin? || current_admin_user.level_1?)
+      if authorized?(:learning_opportunity, a)
         links += link_to t('active_admin.applications.add_learning_opportunities'), page3_admin_application_path(a)
       end
       links.html_safe

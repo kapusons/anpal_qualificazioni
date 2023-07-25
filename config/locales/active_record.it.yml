@@ -4,6 +4,15 @@ it:
       competence:
         one: Competenza
         other: Competenze
+      city:
+        one: Comune
+        other: Comuni
+      province:
+        one: Provincia
+        other: Provincie
+      region:
+        one: Regione
+        other: Regioni
       knowledge:
         one: Conoscenza
         other: Conoscenze
@@ -284,6 +293,23 @@ it:
         name: Nome
         created_at: Creato il
         updated_at: Aggiornato il
+      city:
+        name: Nome
+        created_at: Creato il
+        updated_at: Aggiornato il
+        code_catastale: Codice catastale
+        code_numerico: Codice numerico
+        province: Provincia
+      province:
+        name: Nome
+        code: Sigla
+        region: Regione
+        created_at: Creato il
+        updated_at: Aggiornato il
+      region:
+        name: Nome
+        created_at: Creato il
+        updated_at: Aggiornato il
       admin_user:
         name: Nome
         role: Ruolo
@@ -323,3 +349,11 @@ it:
         duration: Durata
         institution: Ente attuatore
         manner: Modalità di svolgimento
+        start_at: Data inizio
+        end_at: Data fine
+        url: Url a catalogo specifico regionale
+        region_id: Regione
+        province_id: Provincia
+        city_id: Comune
+        description: Descrizione sintetica della qualificazione
+
