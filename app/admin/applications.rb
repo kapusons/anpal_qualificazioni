@@ -260,7 +260,7 @@ ActiveAdmin.register Application do
     expired = Application.expired
     if current_admin_user.super_admin? || current_admin_user.level_2? || current_admin_user.level_3?
       column '' do |a|
-        if expired.include?(a) && ((current_admin_user.level_2? && a.inapp?) || (current_admin_user.level_3? && (a.completed? || a.reviewed?)) || current_admin_user.super_admin?)
+        if expired.include?(a)# && ((current_admin_user.level_2? && a.inapp?) || (current_admin_user.level_3? && (a.completed? || a.reviewed?)) || current_admin_user.super_admin?)
           ('<span class="fa-2x" style="color: #fc6f03;" title="In attesa dal ' + I18n.localize(a.sent_at, format: I18n.t("date.formats.default"))  + '"><i class="fa fa-clock-o"></i></span>').html_safe
         end
       end
