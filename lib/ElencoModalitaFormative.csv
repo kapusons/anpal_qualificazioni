@@ -1,0 +1,27 @@
+﻿Id SIU formazione;Descrizione;ParentIdSIU
+10;CORSI CONDOTTI ATTRAVERSO METODOLOGIE D'AULA (INCLUSE LEZIONI);
+20;FORMAZIONE DUALE;
+21;Tirocinio;20
+22;PCTO;20
+23;Alternanza rafforzata;20
+24;Apprendistato I livello;20
+25;Apprendistato III livello;20
+26;Alternanza simulata;20
+30;CORSI CONDOTTI ATTRAVERSO LA FORMAZIONE A DISTANZA;
+31;Sincrona;30
+32;Asincrona;30
+33;Blended;30
+40;APPRENDIMENTO INDIVIDUALIZZATO;
+41;Apprendimento individualizzato, rivolto a singoli o gruppi ristretti;40
+42;Affiancamento consulenziale mirato;40
+43;Coaching/tutorato informale;40
+44;Auto-apprendimento;40
+50;ALTRA FORMAZIONE TEORICO-PRATICA;
+51;Corsi misti teorico-pratici (inclusa partecipazione a convegni, workshop, presentazione prodotti);50
+52;Formazione sul lavoro guidata (inclusi work experience...);50
+53;Attività pratica/esercitazioni;50
+60;ALTRA MODALITÀ FORMATIVA;
+61;Percorsi di scambio;60
+62;Visite guidate;60
+63;Visite non guidate;60
+64;Altro;60

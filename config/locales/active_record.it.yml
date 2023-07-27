@@ -1,6 +1,9 @@
 it:
   activerecord:
     models:
+      manner:
+        one: Modalità di svolgimento
+        other: Modalità di svolgimento
       competence:
         one: Competenza
         other: Competenze
@@ -348,12 +351,23 @@ it:
         location: Luogo
         duration: Durata
         institution: Ente attuatore
-        manner: Modalità di svolgimento
+        manner_ids: Modalità di svolgimento
+        manners: Modalità di svolgimento
         start_at: Data inizio
         end_at: Data fine
         url: Url a catalogo specifico regionale
         region_id: Regione
         province_id: Provincia
         city_id: Comune
+        region: Regione
+        province: Provincia
+        city: Comune
         description: Descrizione sintetica della qualificazione
+      manner:
+        name: Nome
+        siu_id: SIU Id
+        parent_siu_id: Macro Livello
+        parent: Macro Livello
+        created_at: Creato il
+        updated_at: Aggiornato il
 

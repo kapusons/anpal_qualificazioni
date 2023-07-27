@@ -228,6 +228,22 @@
   padding: 0;
 }
 
+ul[id^='select2-application_learning_opportunities_attributes_'][id$='_manner_ids-results'] {
+  li.parent {
+    cursor: default;
+    display: block;
+    padding: 6px;
+    font-size: 14px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    line-height: 1.5rem;
+    letter-spacing: 0.01em;
+  }
+  li.child {
+    padding-left: 1em;
+  }
+}
+
 body.page1,
 body.page3 {
   form > fieldset.inputs:nth-last-child(1 of :not(.actions)) {

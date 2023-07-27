@@ -8,7 +8,7 @@ ActiveAdmin.register Application do
                                                                                                         knowledges_attributes: [:id, :_destroy, :knowledge, :atlante_knowledge, :atlante_code_knowledge],
                                                                                                         abilities_attributes: [:id, :_destroy, :ability, :atlante_ability, :atlante_code_ability],
                                                                                                         responsibilities_attributes: [:id, :_destroy, :responsibility, :atlante_responsibility, :atlante_code_responsibility],],
-                translations_attributes: [:id, :locale, :title, :url], learning_opportunities_attributes: [:id, :_destroy, :application_id, :region_id, :province_id, :city_id, :duration, :manner, :institution, :start_at, :end_at, :description, :url]
+                translations_attributes: [:id, :locale, :title, :url], learning_opportunities_attributes: [:id, :_destroy, :application_id, :region_id, :province_id, :city_id, :duration, :institution, :start_at, :end_at, :description, :url, manner_ids: []]
   actions :all, except: [:create, :update]
 
   filter :translations_title_contains, label: I18n.t("active_admin.filters.application.translations_title_contains")
@@ -306,7 +306,9 @@ ActiveAdmin.register Application do
         #   r.description
         # end
       end
-      row :region
+      row :region do |a|
+        a.region.try(:name)
+      end
       row :eqf
       row :certifying_agency
       row :isceds
@@ -324,10 +326,22 @@ ActiveAdmin.register Application do
       if application.learning_opportunities.present?
         row :learning_opportunities do
           table_for application.learning_opportunities do
-            column :location
+            column :region do |a|
+              a.region.try(:name)
+            end
+            column :province do |a|
+              a.province.try(:name)
+            end
+            column :city do |a|
+              a.city.try(:name)
+            end
             column :duration
             column :institution
-            column :manner
+            column :manners
+            column :start_at
+            column :end_at
+            column :url
+            column :description
           end
         end
       end

@@ -5,7 +5,6 @@
 #  id             :bigint           not null, primary key
 #  application_id :bigint
 #  duration       :string(255)
-#  manner         :string(255)
 #  institution    :string(255)
 #  created_at     :datetime         not null
 #  updated_at     :datetime         not null
@@ -22,6 +21,8 @@ class LearningOpportunity < ApplicationRecord
   belongs_to :province
   belongs_to :city
 
+  has_many :learning_opportunity_manners
+  has_many :manners, through: :learning_opportunity_manners
 
-  validates :url, :start_at, :end_at, :institution, :manner, :duration, :region_id, :province_id, :city_id, presence: true
+  validates :manner_ids, :url, :start_at, :end_at, :institution, :duration, :region_id, :province_id, :city_id, presence: true
 end

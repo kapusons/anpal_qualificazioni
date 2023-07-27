@@ -5,6 +5,13 @@
 //= require datepicker-it
 
 $.fn.select2.defaults.set('language', $.fn.select2.amd.require("select2/i18n/it"));
+// $.fn.select2.defaults.set('dropdownCssClass',':all:'); Funziona solo sul container
+$.fn.select2.defaults.set('templateResult', function (data, container) {
+    if (data.element) {
+        $(container).addClass($(data.element).attr("class"));
+    }
+    return data.text;
+})
 
 $.datepicker.setDefaults({}, $.datepicker.regional['it']);
 

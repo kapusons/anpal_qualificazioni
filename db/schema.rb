@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_07_25_142527) do
+ActiveRecord::Schema[7.0].define(version: 2023_07_27_080807) do
   create_table "abilities", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "competence_id"
     t.string "ability"
@@ -259,7 +259,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_25_142527) do
   create_table "learning_opportunities", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "application_id"
     t.string "duration"
-    t.string "manner"
     t.string "institution"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -274,6 +273,24 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_25_142527) do
     t.index ["city_id"], name: "index_learning_opportunities_on_city_id"
     t.index ["province_id"], name: "index_learning_opportunities_on_province_id"
     t.index ["region_id"], name: "index_learning_opportunities_on_region_id"
+  end
+
+  create_table "learning_opportunity_manners", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "learning_opportunity_id"
+    t.bigint "manner_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["learning_opportunity_id"], name: "index_learning_opportunity_manners_on_learning_opportunity_id"
+    t.index ["manner_id"], name: "index_learning_opportunity_manners_on_manner_id"
+  end
+
+  create_table "manners", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.integer "siu_id"
+    t.bigint "parent_siu_id"
+    t.string "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["parent_siu_id"], name: "index_manners_on_parent_siu_id"
   end
 
   create_table "nqf_level_ins", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|

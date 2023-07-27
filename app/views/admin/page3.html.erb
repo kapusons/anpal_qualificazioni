@@ -2,13 +2,16 @@
   active_admin_form_for [:admin, @application], url: url do |f|
     f.inputs do
       f.has_many :learning_opportunities, allow_destroy: true, class: "columns" do |b|
+        # need_preload = b.object.region_id.blank? && f.object.region_id.present? && f.object.region_id != Region.find_by(name: "Italia").try(:id)
         b.input :city, as: :nested_select,
-                level_1: { attribute: :region_id },
-                level_2: { attribute: :province_id },
-                level_3: { attribute: :city_id }, input_html: { lang: "it" }
+                level_1: { attribute: :region_id}, #, collection: Region.without_italy, selected: need_preload ? f.object.region : b.object.region_id },
+                level_2: { attribute: :province_id }, #.merge(need_preload ? { collection: Province.where(region_id: f.object.region_id) } : {}),
+                level_3: { attribute: :city_id }
         b.input :duration
         b.input :institution
-        b.input :manner
+        # Cosi optgroup non selezionabili
+        # b.input :manner_ids, as: :select, collection: option_groups_from_collection_for_select(Manner.where(parent_siu_id: nil), :child, :name, :id, :name), multiple: true, required: true
+        b.input :manner_ids, as: :select, collection: Manner.all.map { |a| [a.name, a.id, class: a.parent_siu_id.present? ? 'child' : 'parent']}, multiple: true, required: true
         b.input :start_at, as: :datepicker,
                 datepicker_options: {
                   date_format:  I18n.t("date.formats.custom")
