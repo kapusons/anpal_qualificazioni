@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_07_27_132827) do
+ActiveRecord::Schema[7.0].define(version: 2023_07_27_141849) do
   create_table "abilities", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "competence_id"
     t.string "ability"
@@ -162,6 +162,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_27_132827) do
     t.bigint "source_id"
     t.string "rule"
     t.string "atlante_region"
+    t.date "sent_at"
     t.index ["admission_id"], name: "index_applications_on_admission_id"
     t.index ["certifying_agency_id"], name: "index_applications_on_certifying_agency_id"
     t.index ["created_by_id"], name: "index_applications_on_created_by_id"

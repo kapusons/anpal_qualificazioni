@@ -114,4 +114,15 @@ $(document).ready(function () {
         }
 
     });
+
+    // workaround per selezionare nei filtri "Urgenti" la chiave
+    let $element = $("select#q_sent_at_eq")
+    if ($element.length > 0) {
+        const urlParams = new URLSearchParams(window.location.search);
+        const value = urlParams.get('q[sent_at_eq]')
+        if (value) {
+            console.log(value)
+            $element.val(value).trigger('change');
+        }
+    }
 });

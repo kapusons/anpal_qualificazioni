@@ -13,6 +13,9 @@ ActiveAdmin.register Application do
 
   filter :translations_title_contains, label: I18n.t("active_admin.filters.application.translations_title_contains")
   filter :status_eq, as: :select, collection: Application.aasm.states.map(&:name).map { |a| [Application.human_enum_name(:status, a), a] }, label: I18n.t("active_admin.filters.application.status_eq")
+  filter :sent_at_eq, as: :select, collection: ["Tutti", "Urgenti"], label: I18n.t("active_admin.filters.application.expired"), scope: lambda {
+    puts "ciao"
+  }
 
   action_item :integration_request, only: [], if: proc { resource.completed? && (current_admin_user.super_admin? || current_admin_user.level_3?) } do
     link_to t('active_admin.applications.integration_request'), integration_request_admin_application_path(resource)
@@ -254,7 +257,14 @@ ActiveAdmin.register Application do
     if current_admin_user.super_admin? || current_admin_user.level_2? || current_admin_user.level_3?
       column :in_progress_by
     end
-    # column :status
+    expired = Application.expired
+    if current_admin_user.super_admin? || current_admin_user.level_2? || current_admin_user.level_3?
+      column '' do |a|
+        if expired.include?(a) && ((current_admin_user.level_2? && a.inapp?) || (current_admin_user.level_3? && (a.completed? || a.reviewed?)) || current_admin_user.super_admin?)
+          ('<span class="fa-2x" style="color: #fc6f03;" title="In attesa dal ' + I18n.localize(a.sent_at, format: I18n.t("date.formats.default"))  + '"><i class="fa fa-clock-o"></i></span>').html_safe
+        end
+      end
+    end
     actions do |a|
       links = ""
       if a.completed? && (current_admin_user.super_admin? || current_admin_user.level_3?)
@@ -404,6 +414,14 @@ ActiveAdmin.register Application do
   end
 
   controller do
+
+    def scoped_collection
+      if params.dig("q", "sent_at_eq") == "Urgenti"
+          super.expired
+      else
+        super
+      end
+    end
 
     def new
       @application = Application.new

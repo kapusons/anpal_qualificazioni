@@ -26,11 +26,14 @@
 #  source_id            :bigint
 #  rule                 :string(255)
 #  atlante_region       :string(255)
+#  sent_at              :date
 #  title                :string(255)
 #  url                  :string(255)
 #
 class Application < ApplicationRecord
   include AASM
+
+  MY_DAYS = 10.days
 
   has_paper_trail if: Proc.new { |t| false },
                   meta: { meta_objects: proc { |a| a.meta_objects } },
@@ -75,16 +78,16 @@ class Application < ApplicationRecord
     state :reviewed
     state :accepted
     event :complete do
-      transitions from: [:draft, :integration_required], to: :completed
+      transitions from: [:draft, :integration_required], to: :completed, after: :update_sent_at
     end
     event :in_progress do
       transitions from: [:completed, :reviewed], to: :in_progress
     end
     event :send_to_inapp do
-      transitions from: :in_progress, to: :inapp
+      transitions from: :in_progress, to: :inapp, after: :update_sent_at
     end
     event :review do
-      transitions from: :inapp, to: :reviewed
+      transitions from: :inapp, to: :reviewed, after: :update_sent_at
     end
     event :accept do
       transitions from: :reviewed, to: :accepted
@@ -155,6 +158,8 @@ class Application < ApplicationRecord
 
     filtered
   }
+
+  scope :expired, -> { where(status: ["completed", "reviewed", "inapp"]).where(Application.arel_table[:sent_at].lteq(DateTime.now - MY_DAYS)) }
 
   STEP_1_FIELD_TO_VALIDATE = [:title]
   validates :title, presence: true, if: :need_validate_1?
@@ -238,4 +243,12 @@ class Application < ApplicationRecord
     JSON.parse(self.competences.to_json(except: [:created_at, :updated_at], include: [ knowledges: { except: [:created_at, :updated_at]  }, abilities: { except: [:created_at, :updated_at]  }, responsibilities: { except: [:created_at, :updated_at]  }]))
   end
 
+  def update_sent_at
+    self.update_column(:sent_at, DateTime.now)
+  end
+
+  def later?
+    return false if sent_at.blank?
+    sent_at + MY_DAYS < DateTime.now
+  end
 end

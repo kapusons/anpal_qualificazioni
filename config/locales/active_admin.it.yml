@@ -46,6 +46,7 @@ it:
         translations_title_contains: Titolo
         translations_description_contains: Descrizione
         status_eq: Status
+        expired: Urgenti
     actions:
       application:
         send: Invia
