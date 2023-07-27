@@ -4,7 +4,7 @@
     f.inputs do
       f.input :atlante_title, as: :hidden
       f.input :atlante_code, as: :hidden
-      # f.input :atlante_region, as: :hidden
+      f.input :atlante_region, as: :hidden
       f.input :guarantee_process, as: :hidden
       f.input :atlante, as: :select, desc: true, collection: adas, input_html: { class: "atlante-adas", "data-url": atlante_admin_applications_path, "data-message": I18n.t("active_admin.applications.confim_ada_selection") }
       f.translate_inputs do |t|

@@ -15,7 +15,7 @@
       end
     f.inputs class: "inputs columns" do
       f.input :isced_ids, as: :select, collection: Isced.all.map { |a| [a.name, a.id] }, multiple: true, required: true, desc: true
-      f.input :region, as: :select, collection: Region.all.map { |a| [a.name, a.id] }, required: true, desc: true
+      f.input :region, as: :select, collection: Region.all.map { |a| [a.name, a.id] }, required: true, desc: true, selected: f.object.region_id || Region.find_repertorio(f.object)
     end
     f.inputs class: "inputs columns" do
       f.input :credit, input_html: { type: 'number' }, desc: true
@@ -28,7 +28,7 @@
     end
     f.inputs class: "inputs columns" do
       f.input :eqf, as: :select, collection: Eqf.all.map { |a| [a.name, a.id] }, required: true, desc: true
-      f.input :certifying_agency, as: :select, collection: CertifyingAgency.all.map { |a| [a.name, a.id] }, required: true, desc: true
+      f.input :certifying_agency, as: :select, collection: CertifyingAgency.all.map { |a| [a.name, a.id] }, required: true, desc: true, selected: f.object.region_id || CertifyingAgency.find_repertorio(f.object)
     end
     f.inputs class: "inputs columns" do
       f.input :guarantee_entity, as: :select, collection: GuaranteeEntity.all.map { |a| [a.name, a.id] }

@@ -444,6 +444,7 @@ ActiveAdmin.register Application do
         a.translations.find_or_initialize_by(locale: 'en')
         a.atlante_title = result["titolo"]
         a.atlante_code = result["codice"]
+        a.atlante_region = result["repertorio"]
         result["competenze"].each do |c|
           cc = a.competences.build(competence: c["titolo"], atlante_competence: c["titolo"], atlante_code_competence: c["codice"])
           c["abilita"].each do |a|

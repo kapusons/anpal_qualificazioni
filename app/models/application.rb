@@ -25,6 +25,7 @@
 #  in_progress_by_id    :bigint
 #  source_id            :bigint
 #  rule                 :string(255)
+#  atlante_region       :string(255)
 #  title                :string(255)
 #  url                  :string(255)
 #
@@ -56,6 +57,7 @@ class Application < ApplicationRecord
                     expiration_date:  proc { |a| true },
                     atlante_code:  proc { |a| true },
                     atlante_title:  proc { |a| true },
+                    atlante_region:  proc { |a| true },
                     guarantee_process:  proc { |a| true },
                     created_by_id:  proc { |a| true },
                     updated_by_id:  proc { |a| true },
