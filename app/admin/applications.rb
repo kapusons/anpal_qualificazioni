@@ -13,9 +13,7 @@ ActiveAdmin.register Application do
 
   filter :translations_title_contains, label: I18n.t("active_admin.filters.application.translations_title_contains")
   filter :status_eq, as: :select, collection: Application.aasm.states.map(&:name).map { |a| [Application.human_enum_name(:status, a), a] }, label: I18n.t("active_admin.filters.application.status_eq")
-  filter :sent_at_eq, as: :select, collection: ["Tutti", "Urgenti"], label: I18n.t("active_admin.filters.application.expired"), scope: lambda {
-    puts "ciao"
-  }
+  filter :sent_at_eq, as: :select, collection: ["Tutti", "Urgenti"], label: I18n.t("active_admin.filters.application.expired"), if: proc { current_admin_user.super_admin? || current_admin_user.level_2? || current_admin_user.level_3? }
 
   action_item :integration_request, only: [], if: proc { resource.completed? && (current_admin_user.super_admin? || current_admin_user.level_3?) } do
     link_to t('active_admin.applications.integration_request'), integration_request_admin_application_path(resource)
