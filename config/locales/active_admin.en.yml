@@ -1,7 +1,76 @@
 en:
+  date:
+    formats:
+      custom: "mm/dd/yy"
+      ruby_custom: "%m/%d/%Y"
   active_admin:
+    new: Add
+    create: Add
+    page1: Edit
+    update1: Edit
+    page2: Edit
+    page3: Edit
+    save_page1: Edit
+    save_page2: Edit
+    save_page3: Edit
     dashboards:
-      welcome: Welcome.
+      welcome: Welcome ro backoffice.
+      last_applications: Latest updates on instances
+      last_comments: Latest requests on instances
+      nothing: No one
+      see_all: Show all
+      detail: Show
+      create: Create new instance
     menu:
       parents:
         administration: Administration
+    applications:
+      sent_learning: "Learning opportunities successfully saved."
+      sent_to_review: "Instance has been sent successfully."
+      required_integration: "Instance integration request has been submitted successfully."
+      in_progress: "Instance has been accepted."
+      accepted: "Instance has been successfully accepted."
+      new_application: Add
+      integration_request: Integration request
+      accept: Accept instance
+      take: Start evaluation
+      review: Send to INAPP
+      add_learning_opportunities: Add learning opportunity
+      sent_to_inapp: "Instance has been successfully sent to INAPP."
+      confim_ada_selection: "Warning: by confirming the operation, some values could be definitively replaced with those deriving from Atlante."
+    filters:
+      location:
+        code_eq: Code
+        author_of_AdminUser_type_id_eq: Author
+      application:
+        translations_title_contains: Title
+        translations_description_contains: Description
+        status_eq: Status
+        expired: Urgent
+    actions:
+      application:
+        send: Send
+        save: Save
+        submit: Save and continue
+        save_without_validation: Save as draft
+    comments:
+      download_attachment: Download attachment
+      integration_request_title_content: Integration request detail
+      inapp_title_content: INAPP opinion
+      in_integration_request_title_content: Add integration request
+      accept_title_content: Advise detail
+      accept_level_2_title_content: Confirm acceptance
+      all_requests: All request
+      send_integration_request: Send integration request
+      sent_integration_request: Integration request successfully sent
+      send_acceptance_request_with_advice: Accept with advise
+      sent_acceptance_request_with_advice: Instance successfully accepted
+      send_acceptance_review: Accept
+      send_opinion: Send opinion
+      sent_opinion: Opinion sent successfully
+      sent_acceptance_review: Instance successfully accepted
+      send_acceptance_request: Accept without advise
+      sent_acceptance_request: Instance successfully accepted
+      author: Author
+      resource: Instance
+      no_comments_yet: No description

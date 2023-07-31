@@ -38,8 +38,8 @@ it:
         one: Commento
         other: Commenti
       isced:
-        one: Settore
-        other: Settori
+        one: Livello ISCED
+        other: Livelli ISCED
       eqf:
         one: Livello dell'EQF
         other: Livelli dell'EQF

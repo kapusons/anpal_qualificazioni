@@ -27,7 +27,7 @@ it:
     applications:
       sent_learning: "Learning opportunities salvate correttamente."
       sent_to_review: "L'istanza è stata inviata correttamente."
-      required_integration: "La richieta di integrazione dell'instanza è stata inviata correttamente."
+      required_integration: "La richiesta di integrazione dell'istanza è stata inviata correttamente."
       in_progress: "L'istanza è stata presa in carico."
       accepted: "L'istanza è stata accettata correttamente."
       new_application: Aggiungi

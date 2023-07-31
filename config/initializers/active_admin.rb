@@ -333,3 +333,7 @@ ActiveAdmin.setup do |config|
   #
   # config.use_webpacker = true
 end
+
+# ActiveAdmin::ViewHelpers::ActiveAdminApplicationHelper.module_eval do
+#   include ::ApplicationHelper
+# end

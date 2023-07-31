@@ -92,3 +92,4 @@ gem 'active_admin_versioning', git: 'https://github.com/baarkerlounger/active_ad
 gem 'carrierwave'
 gem 'mini_magick'
 gem 'sidekiq-scheduler'
+gem 'flag-icons-rails'
