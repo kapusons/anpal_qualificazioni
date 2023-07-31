@@ -33,7 +33,7 @@ en:
         other: Instances
       admin_user:
         one: User
-        other: USers
+        other: Users
       comment:
         one: Comment
         other: Comments
