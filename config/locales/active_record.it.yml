@@ -47,11 +47,11 @@ it:
         one: Codice Ateco
         other: Codici Ateco
       admission:
-        one: Requisito di ammissione
-        other: Requisiti di ammissione
+        one: Livello EQF di accesso
+        other: Livelli EQF di accesso
       certifying_agency:
-        one: Ente certificatore
-        other: Enti certificatori
+        one: Ente pubblico titolare
+        other: Enti pubblici titolari
       cp_istat:
         one: CP Istat 2021
         other: CP Istat 2021
@@ -74,8 +74,8 @@ it:
         one: Collegamento con i relativi supplementi
         other: Collegamenti con i relativi supplementi
       source:
-        one: Fonte di informazione
-        other: Fonti di informazione
+        one: Fonte degli ordinamenti
+        other: Fonti degli ordinamenti
       learning_opportunity:
         one: Learning opportunity
         other: Learning opportunities
