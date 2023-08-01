@@ -2,8 +2,10 @@
   active_admin_form_for [:admin, @application], url: url do |f|
     f.inputs do
       f.has_many :learning_opportunities, allow_destroy: true, class: "columns" do |b|
-        # need_preload = b.object.region_id.blank? && f.object.region_id.present? && f.object.region_id != Region.find_by(name: "Italia").try(:id)
-        b.input :city, as: :nested_select,
+        b.input :start_at, input_html: { class: 'date_selector', value: b.object.start_at.try(:strftime) }, as: :hidden
+        b.input :end_at, input_html: { class: 'date_selector', value: b.object.end_at.try(:strftime) }, as: :hidden
+        need_preload = b.object.region_id.blank? && f.object.region_id.present? && f.object.region_id != Region.find_by(name: "Italia").try(:id)
+        b.input :city, as: :nested_select_localized,
                 level_1: { attribute: :region_id}, #, collection: Region.without_italy, selected: need_preload ? f.object.region : b.object.region_id },
                 level_2: { attribute: :province_id }, #.merge(need_preload ? { collection: Province.where(region_id: f.object.region_id) } : {}),
                 level_3: { attribute: :city_id }
@@ -12,16 +14,20 @@
         # Cosi optgroup non selezionabili
         # b.input :manner_ids, as: :select, collection: option_groups_from_collection_for_select(Manner.where(parent_siu_id: nil), :child, :name, :id, :name), multiple: true, required: true
         b.input :manner_ids, as: :select, collection: Manner.all.map { |a| [a.name, a.id, class: a.parent_siu_id.present? ? 'child' : 'parent']}, multiple: true, required: true
-        b.input :start_at, as: :datepicker,
+        b.input :start_at_date_selector, as: :datepicker,
                 datepicker_options: {
+                  alt_field: '.date_selector',
+                  alt_format: "yy-mm-dd",
                   date_format:  I18n.t("date.formats.custom")
                 }, input_html: { value: b.object.start_at.try(:strftime, I18n.t("date.formats.ruby_custom")) }
-        b.input :end_at, as: :datepicker,
+        b.input :end_at_date_selector, as: :datepicker,
                 datepicker_options: {
                   # min_date: 3.days.ago.to_date,
                   # max_date: "+1W +5D"
-                  date_format: I18n.t("date.formats.custom")
-                }, input_html: { value: b.object.end_at.try(:strftime, I18n.t("date.formats.ruby_custom")) }
+                  alt_field: '.date_selector',
+                  date_format: I18n.t("date.formats.custom"),
+                  alt_format: "yy-mm-dd",
+        }, input_html: { value: b.object.end_at.try(:strftime, I18n.t("date.formats.ruby_custom")) }
         b.input :url
         b.input :description, as: :text
       end

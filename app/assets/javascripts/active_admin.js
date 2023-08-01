@@ -4,7 +4,14 @@
 //= require it
 //= require datepicker-it
 
-$.fn.select2.defaults.set('language', $.fn.select2.amd.require("select2/i18n/it"));
+const lang = window.location.pathname.split('/')[1] || 'it'
+// $.fn.select2.defaults.set('language', $.fn.select2.amd.require("select2/i18n/" + lang));
+const itlang = $.fn.select2.amd.require("select2/i18n/it");
+if (lang == 'en') {
+} else {
+    $.fn.select2.defaults.set('language', itlang);
+    $.datepicker.setDefaults($.datepicker.regional['it']);
+}
 // $.fn.select2.defaults.set('dropdownCssClass',':all:'); Funziona solo sul container
 $.fn.select2.defaults.set('templateResult', function (data, container) {
     if (data.element) {
@@ -13,18 +20,16 @@ $.fn.select2.defaults.set('templateResult', function (data, container) {
     return data.text;
 })
 
-$.datepicker.setDefaults({}, $.datepicker.regional['it']);
-
 $(document).ready(function () {
 
     function stripText(element) {
-        element.contents().filter(function(){
+        element.contents().filter(function () {
             return (this.nodeType == 3);
         }).remove();
         return element
     }
 
-    function changeAddIcon(container, klass="") {
+    function changeAddIcon(container, klass = "") {
         let addButton = container.find('.button.has_many_add');
         addButton.addClass("customized");
         addButton.addClass(klass);
@@ -33,8 +38,7 @@ $(document).ready(function () {
 
     function changeRemoveIcon(fieldset) {
         let removeButton = fieldset.find('> ol > li > .button.has_many_remove');
-        if (fieldset.closest('.learning_opportunities').length > 0)
-        {
+        if (fieldset.closest('.learning_opportunities').length > 0) {
             removeButton.addClass("customized-learning-opportunity")
         } else {
             removeButton.html('<span class="fa-2x"><i class="fa fa-trash"></i></span>');
@@ -47,35 +51,35 @@ $(document).ready(function () {
 
     function changeDeleteInput(fieldset) {
         let removeButton = fieldset.find('> ol > li.boolean.has_many_delete');
-        if (fieldset.closest('.learning_opportunities').length > 0)
-        {
+        if (fieldset.closest('.learning_opportunities').length > 0) {
             removeButton.addClass("customized-learning-opportunity")
         } else {
             stripText(removeButton.find('label'));
             let input = fieldset.find("input:visible").not(":checkbox");
             input.css("width", 'calc(100% - 40px)')
-            removeButton.addClass("customized").attr('title', 'Rimuovi al salvataggio');
+            const label = (lang == 'en') ? 'Remove on save' : 'Rimuovi al salvataggio';
+            removeButton.addClass("customized").attr('title', label);
         }
 
     }
 
 
-    $('.has_many_container').each(function(i, c) {
+    $('.has_many_container').each(function (i, c) {
         changeAddIcon($(c), "add_competenza");
-        $(c).find("fieldset").each(function(i, c) {
+        $(c).find("fieldset").each(function (i, c) {
             changeRemoveIcon($(c))
             changeDeleteInput($(c))
         });
         if ($(c).hasClass('competences')) {
-            $(c).find("fieldset.inputs.has_many_fields > ol > div.hide").each(function(i, b) {
+            $(c).find("fieldset.inputs.has_many_fields > ol > div.hide").each(function (i, b) {
                 $(b).closest("fieldset.inputs.has_many_fields").hide();
             });
         }
 
     });
 
-    $(document).on('has_many_add:after', function(e, fieldset) {
-        fieldset.find('.has_many_container').each(function(i, c) {
+    $(document).on('has_many_add:after', function (e, fieldset) {
+        fieldset.find('.has_many_container').each(function (i, c) {
             changeAddIcon($(c), 'add_internal');
         });
         changeRemoveIcon(fieldset)
@@ -85,7 +89,7 @@ $(document).ready(function () {
 
     $('.atlante-adas').on("select2:select", function (e) {
         let $target = $(e.target);
-        ActiveAdmin.ModalDialog($target.data('message'), {}, function() {
+        ActiveAdmin.ModalDialog($target.data('message'), {}, function () {
             var input = $("<input>").attr("type", "hidden").attr("name", "build_nested").val(true);
             $target.closest("form").append(input).submit();
         })
@@ -95,7 +99,7 @@ $(document).ready(function () {
     let $commentsAcc = $("div[id^=active_admin_comments_for_application_][class*=accept_form]")
     $commentsInt.hide()
     $commentsAcc.hide()
-    $('button.button.integration_request').on("click", function (){
+    $('button.button.integration_request').on("click", function () {
         if ($commentsInt.is(":visible")) {
             $commentsInt.hide();
         } else {
@@ -105,7 +109,7 @@ $(document).ready(function () {
 
     });
     //
-    $('button.button.accept').on("click", function (){
+    $('button.button.accept').on("click", function () {
         if ($commentsAcc.is(":visible")) {
             $commentsAcc.hide();
         } else {

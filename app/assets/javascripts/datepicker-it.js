@@ -33,7 +33,7 @@
         isRTL: false,
         showMonthAfterYear: false,
         yearSuffix: "" };
-    datepicker.setDefaults( datepicker.regional.it );
+    // datepicker.setDefaults( datepicker.regional.it );
 
     return datepicker.regional.it;
 

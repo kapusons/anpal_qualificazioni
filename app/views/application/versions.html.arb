@@ -38,7 +38,7 @@ panel(I18n.t("activerecord.attributes.paper_trail/version.events.details")) do
         row field do |current_instance, item, locale|
           tt = current_instance.meta_objects[field.to_s]
           if tt.try(:[], locale) != item.translation_for(locale).send(field)
-            "<s>#{tt.try(:[], locale).present? ? tt[locale] : 'Nessun valore'}</s></br>#{item.translation_for(locale).send(field)}".html_safe
+            "<s>#{tt.try(:[], locale).present? ? tt[locale] : I18n.t('no_value')}</s></br>#{item.translation_for(locale).send(field)}".html_safe
           else
             "="
           end

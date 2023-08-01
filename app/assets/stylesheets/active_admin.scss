@@ -134,7 +134,9 @@
   color: white;
 }
 
-.input > .input-desc {
+.input > .input-desc,
+.input > .field_with_errors label
+{
   margin: 0;
   display: block;
   line-height: 16px;
@@ -143,6 +145,9 @@
   position: relative;
   transition: 0.28s all;
   width: 100%;
+}
+.input > .field_with_errors label {
+  color: rgba(0, 0, 0, 0.54);
 }
 
 .has_many_container {

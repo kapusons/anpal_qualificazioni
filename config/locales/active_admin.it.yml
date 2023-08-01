@@ -25,6 +25,7 @@ it:
       parents:
         administration: Amministrazione
     applications:
+      waiting: "In attesa dal "
       sent_learning: "Learning opportunities salvate correttamente."
       sent_to_review: "L'istanza è stata inviata correttamente."
       required_integration: "La richiesta di integrazione dell'istanza è stata inviata correttamente."

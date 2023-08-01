@@ -25,6 +25,7 @@ en:
       parents:
         administration: Administration
     applications:
+      waiting: "Waiting from "
       sent_learning: "Learning opportunities successfully saved."
       sent_to_review: "Instance has been sent successfully."
       required_integration: "Instance integration request has been submitted successfully."

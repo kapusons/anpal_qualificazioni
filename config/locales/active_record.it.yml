@@ -1,4 +1,5 @@
 it:
+  no_value: 'Nessun valore'
   activerecord:
     models:
       manner:
@@ -354,7 +355,9 @@ it:
         manner_ids: Modalità di svolgimento
         manners: Modalità di svolgimento
         start_at: Data inizio
+        start_at_date_selector: Data inizio
         end_at: Data fine
+        end_at_date_selector: Data fine
         url: Url a catalogo specifico regionale
         region_id: Regione
         province_id: Provincia

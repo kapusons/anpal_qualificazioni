@@ -81,8 +81,10 @@ module ActiveAdmin
           end
           @collection.each do |record|
             td(width: 60) do
-              strong do
-                "#{locale.to_s}"
+              if ::Application.translated_attribute_names.include?(title)
+                strong do
+                  "#{locale.to_s}"
+                end
               end
             end
             td do
