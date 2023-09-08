@@ -232,7 +232,7 @@ ActiveAdmin.setup do |config|
     config.namespace :admin do |admin|
       admin.build_menu :utility_navigation do |menu|
         admin.add_current_user_to_menu  menu
-        menu.add label: "Modifica account", url: proc{ edit_admin_admin_user_path(current_admin_user) }
+        menu.add label: Proc.new { params[:locale] == 'it' ? "Modifica account" : 'Edit account' } , url: proc{ edit_admin_admin_user_path(current_admin_user) }, id: 'edit-account-link'
         admin.add_logout_button_to_menu menu
       end
     end

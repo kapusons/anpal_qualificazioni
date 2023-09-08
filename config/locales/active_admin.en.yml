@@ -14,7 +14,7 @@ en:
     save_page2: Edit
     save_page3: Edit
     dashboards:
-      welcome: Welcome ro backoffice.
+      welcome: Welcome to backoffice.
       last_applications: Latest updates on instances
       last_comments: Latest requests on instances
       nothing: No one

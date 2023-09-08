@@ -11,9 +11,11 @@ ActiveAdmin.register Application do
                 translations_attributes: [:id, :locale, :title, :url], learning_opportunities_attributes: [:id, :_destroy, :application_id, :region_id, :province_id, :city_id, :duration, :institution, :start_at, :end_at, :description, :url, manner_ids: []]
   actions :all, except: [:create, :update]
 
-  filter :translations_title_contains, label: I18n.t("active_admin.filters.application.translations_title_contains")
-  filter :status_eq, as: :select, collection: Application.aasm.states.map(&:name).map { |a| [Application.human_enum_name(:status, a), a] }, label: I18n.t("active_admin.filters.application.status_eq")
-  filter :sent_at_eq, as: :select, collection: ["Tutti", "Urgenti"], label: I18n.t("active_admin.filters.application.expired"), if: proc { current_admin_user.super_admin? || current_admin_user.level_2? || current_admin_user.level_3? }
+  filter :translations_title_contains, label: proc { I18n.t("active_admin.filters.application.translations_title_contains") }
+  filter :status_eq, as: :select, collection: Application.aasm.states.map(&:name).map { |a| [Application.human_enum_name(:status, a), a] }, label: proc { I18n.t("active_admin.filters.application.status_eq") }
+  filter :sent_at_eq, as: :select, collection: proc {
+    I18n.locale == :it ? ["Tutti", "Urgenti"] : ["All", 'Urgent']
+  }, label: proc { I18n.t("active_admin.filters.application.expired") }, if: proc { current_admin_user.super_admin? || current_admin_user.level_2? || current_admin_user.level_3? }
 
   action_item :integration_request, only: [], if: proc { resource.completed? && (current_admin_user.super_admin? || current_admin_user.level_3?) } do
     link_to t('active_admin.applications.integration_request'), integration_request_admin_application_path(resource)
@@ -414,7 +416,7 @@ ActiveAdmin.register Application do
   controller do
 
     def scoped_collection
-      if params.dig("q", "sent_at_eq") == "Urgenti"
+      if ["Urgenti", 'Urgent'].include?(params.dig("q", "sent_at_eq"))
           super.expired
       else
         super

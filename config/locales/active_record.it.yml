@@ -71,9 +71,6 @@ it:
       language:
         one: Lingua delle informazioni
         other: Lingue delle informazioni
-      rule:
-        one: Collegamento con i relativi supplementi
-        other: Collegamenti con i relativi supplementi
       source:
         one: Fonte degli ordinamenti
         other: Fonti degli ordinamenti
