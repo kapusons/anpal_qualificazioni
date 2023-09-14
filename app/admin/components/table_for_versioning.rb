@@ -26,7 +26,7 @@ module ActiveAdmin
               new_obj = co
               next
             end
-            new_obj.object = YAML.dump(YAML.load(new_obj.object, permitted_classes: [Time]).merge(YAML.load(co.object, permitted_classes: [Time])))
+            new_obj.object = YAML.dump(YAML.load(new_obj.object, permitted_classes: [Time, Date]).merge(YAML.load(co.object, permitted_classes: [Time, Date])))
             d = nil
             if co.event == "step1"
               hash = { }

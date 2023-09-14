@@ -4,7 +4,7 @@ ActiveAdminVersioning::PaperTrail::VersionConcern.module_eval do
   end
 
   def item_attributes
-    YAML.load(object, permitted_classes: [Time]
+    YAML.load(object, permitted_classes: [Time, Date]
     ).slice(*item_column_names)
   end
 

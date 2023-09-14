@@ -39,6 +39,6 @@ module Anpal
     config.i18n.available_locales = [:it, :en]
     config.time_zone = 'Europe/Rome'
     config.active_job.queue_adapter = :sidekiq
-    ActiveRecord.yaml_column_permitted_classes += [Time]
+    ActiveRecord.yaml_column_permitted_classes += [Time, Date]
   end
 end
