@@ -150,6 +150,8 @@
   color: rgba(0, 0, 0, 0.54);
 }
 
+td.col-id { white-space:nowrap !important; }
+
 html:lang(it) {
   .has_many_container {
     &.learning_opportunities {
