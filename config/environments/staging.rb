@@ -62,13 +62,13 @@ Rails.application.configure do
   config.action_mailer.raise_delivery_errors = true
   config.action_mailer.delivery_method = :smtp
   config.action_mailer.smtp_settings = {
-    :address              => 'smtp-relay.brevo.com',
-    :port                 =>  587,
-    :domain               => 'anpal.kapusons.it',
-    :user_name            => 'acquisti@kapusons.it',
-    :password             => 'xsmtpsib-1572857fbcd7b3fb217855576fadbb4188251f25d0aa6dc220f18a6e479072f0-NV2jScrzGEOhP18U',
-    :authentication       => 'plain',
-    :openssl_verify_mode    => "none"
+    :address        => Rails.application.config_for(:smtp).smtp_address,
+    :port           => Rails.application.config_for(:smtp).smtp_port,
+    :authentication => Rails.application.config_for(:smtp).smtp_authentication,
+    :user_name      => Rails.application.config_for(:smtp).smtp_username,
+    :password       => Rails.application.config_for(:smtp).smtp_password,
+    :domain         => Rails.application.config_for(:smtp).smtp_domain,
+    :openssl_verify_mode => Rails.application.config_for(:smtp).smtp_openssl_verify_mode
   }
   Rails.application.routes.default_url_options[:host] = 'anpal.kapusons.it' # questo è necessario per active_storage
   Rails.application.routes.default_url_options[:protocol] = 'https'
