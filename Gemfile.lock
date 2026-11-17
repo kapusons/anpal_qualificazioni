@@ -270,7 +270,7 @@ GEM
     net-ssh (8.1.2)
       logger
       openssl (>= 3.2.0)
-    nio4r (2.5.8)
+    nio4r (2.5.9)
     nokogiri (1.14.2-arm64-darwin)
       racc (~> 1.4)
     nokogiri (1.14.2-x86_64-linux)
@@ -323,7 +323,7 @@ GEM
       activerecord (>= 6.1.5)
       activesupport (>= 6.1.5)
       i18n
-    rbtree3 (0.7.0)
+    rbtree3 (0.7.1)
     redcarpet (3.6.0)
     redis-client (0.14.0)
       connection_pool
