@@ -7,7 +7,7 @@
 # server "example.com", user: "deploy", roles: %w{app web}, other_property: :other_value
 # server "db.example.com", user: "deploy", roles: %w{db}
 
-server 'sviluppo22', user: 'kapusons', roles: %w{app db web}
+server 'sviluppo26', user: 'kapusons', roles: %w{app db web}
 
 set :branch, ENV['BRANCH'] || 'main'
 

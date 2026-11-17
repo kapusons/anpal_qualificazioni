@@ -428,7 +428,7 @@ DEPENDENCIES
   kaminari-i18n
   letter_opener
   mini_magick
-  mysql2 (~> 0.5)
+  mysql2 (~> 0.5.5)
   paper_trail
   puma (~> 5.0)
   rails (~> 7.0.4, >= 7.0.4.3)
